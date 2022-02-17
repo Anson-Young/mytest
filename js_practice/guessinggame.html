@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+	#prompt {
+		font-size : 20px;
+	}
+	#low, #high {
+		background : lightgray;
+	}
+	#mid {
+		background : green;
+	}
+	table {
+		width : 90%;
+		height : 22px;
+		margin : 0 auto;
+	}
+</style>
+<script>
+	window.onload = function() {
+		//alert(1234);
+		var ui = {
+			low : null,
+			mid : null,
+			high : null,
+			text : null,
+			prompt : null,
+			replay : null,
+			title : null
+		};
+		
+		var result = {
+			low : 0,
+			high : 100,
+			targetnumber : Math.floor(Math.random() * 100) + 1,
+			time : 0,
+			guesslast : undefined
+		};
+		
+		for (var id in ui)
+			ui[id] = document.getElementById(id);
+		
+		ui.replay.style.display = "none";
+		
+		if (history.state) result = history.state;
+		else history.replaceState(result, "", "#guess0");
+		
+		display(result);
+		
+		ui.replay.onclick = function() {
+			result.low = 0;
+			result.high = 100;
+			result.targetnumber = Math.floor(Math.random() * 100) + 1;
+			result.time = 0;
+			result.guesslast = undefined;
+			display(result);
+			history.pushState(result, "", "#guess0");
+		};
+		
+		ui.text.onchange = function() {
+			var value = this.value;
+			if (!value) return;
+			
+			value = parseInt(value);
+			
+			if (value <= result.low || value >= result.high) {
+				alert("Please enter a number greater than 0 and less than 100");
+				ui.text.value = "";
+				return;
+			}
+			
+			result.guesslast = value;
+			
+			if (value < result.targetnumber) {
+				result.low = value;
+			} else if (value > result.targetnumber) {
+				result.high = value;
+			}
+			display(result);
+			history.pushState(result, "", "#guess" + (++result.time));
+		};
+		
+		window.onpopstate = function(event) {
+			display(event.state);
+		};
+		
+		function display(state) {
+			ui.title.innerHTML = document.title = "I'm thinking of a number between " + state.low + " and " + state.high + ".";
+			ui.text.style.display = "inline";
+			ui.replay.style.display = "none";
+			if (!state.guesslast) {
+				ui.prompt.innerHTML = "Type your guess and hit Enter:";
+			} else if (state.low === state.guesslast) {
+				ui.prompt.innerHTML = state.low + " is too low.Guess again:";
+			} else if (state.high === state.guesslast) {
+				ui.prompt.innerHTML = state.high + " is too high.Guess again:";
+			} else {
+				ui.title.innerHTML = document.title = state.guesslast + " is correct!";
+				ui.prompt.innerHTML = "You Win!";
+				ui.text.style.display = "none";
+				ui.replay.style.display = "inline";
+			}
+			ui.low.style.width = (state.low - 0) + "%";
+			ui.mid.style.width = (state.high - state.low) + "%";
+			ui.high.style.width = (100 - state.high) + "%";
+			ui.text.value = "";
+			ui.text.focus();
+		}
+	};
+	
+	
+</script>
+</head>
+<body>
+	<h1 id="title">I'm thinking of a number...</h1>
+	<table>
+		<tr>
+			<td id="low"></td>
+			<td id="mid"></td>
+			<td id="high"></td>
+		</tr>
+	</table>
+	<p>
+		<span id="prompt">Type your guess and hit Enter:</span>
+		<input type="text" id="text"/>
+		<input type="button" value="Play Again" id="replay"/>
+	</p>
+</body>
+</html>

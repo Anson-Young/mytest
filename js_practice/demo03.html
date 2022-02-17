@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+	body {
+		margin-left : 30px;
+		margin-right : 15px;
+		background-color : #ffffff;
+		/*margin-top : 0;*/
+	}
+	p{
+		font-size : 24px;
+		/*margin : 0;*/
+	}
+</style>
+</head>
+<script>
+	/*
+	window.onload = function() {
+		var sub = document.getElementById("sub");
+		sub.addEventListener("click", function() {
+			document.forms[0].action = "http://www.baidu.com";
+			document.forms[0].submit();
+		}, false);
+	};
+	*/
+	
+	/**
+	 * Drag.js: drag absolutely positioned HTML elements.
+	 *
+	 * This module defines a single drag() function that is designed to be called
+	 * from an onmousedown event handler. Subsequent mousemove events will
+	 * move the specified element. A mouseup event will terminate the drag.
+	 * This implementation works with both the standard and IE event models.
+	 * It requires the getScrollOffsets() function from elsewhere in this book.
+	 *
+	 * Arguments:
+	 *
+	 *   elementToDrag: the element that received the mousedown event or
+	 *     some containing element. It must be absolutely positioned. Its
+	 *     style.left and style.top values will be changed based on the user's
+	 *     drag.
+	 *
+	 *   event: the Event object for the mousedown event.
+	 **/
+	function drag(elementToDrag, event) {
+		// The initial mouse position, converted to document coordinates
+		var scroll = getScrollOffsets();  // A utility function from elsewhere
+		var startX = event.clientX + scroll.x;
+		var startY = event.clientY + scroll.y;
+
+		// The original position (in document coordinates) of the element
+		// that is going to be dragged.  Since elementToDrag is absolutely
+		// positioned, we assume that its offsetParent is the document body.
+		var origX = elementToDrag.offsetLeft;
+		var origY = elementToDrag.offsetTop;
+
+		// Compute the distance between the mouse down event and the upper-left
+		// corner of the element. We'll maintain this distance as the mouse moves.
+		var deltaX = startX - origX;
+		var deltaY = startY - origY;
+
+		// Register the event handlers that will respond to the mousemove events
+		// and the mouseup event that follow this mousedown event.
+		if (document.addEventListener) {  // Standard event model
+			// Register capturing event handlers on the document
+			document.addEventListener("mousemove", moveHandler, false);
+			document.addEventListener("mouseup", upHandler, false);
+		}
+		else if (document.attachEvent) {  // IE Event Model for IE5-8
+			// In the IE event model, we capture events by calling
+			// setCapture() on the element to capture them.
+			elementToDrag.setCapture();
+			elementToDrag.attachEvent("onmousemove", moveHandler);
+			elementToDrag.attachEvent("onmouseup", upHandler);
+			// Treat loss of mouse capture as a mouseup event.
+			elementToDrag.attachEvent("onlosecapture", upHandler);
+		}
+
+		// We've handled this event. Don't let anybody else see it.
+		if (event.stopPropagation) event.stopPropagation();  // Standard model
+		else event.cancelBubble = true;                      // IE
+
+		// Now prevent any default action.
+		if (event.preventDefault) event.preventDefault();   // Standard model
+		else event.returnValue = false;                     // IE
+
+		/**
+		 * This is the handler that captures mousemove events when an element
+		 * is being dragged. It is responsible for moving the element.
+		 **/
+		function moveHandler(e) {
+			if (!e) e = window.event;  // IE event Model
+
+			// Move the element to the current mouse position, adjusted by the
+			// position of the scrollbars and the offset of the initial click.
+			var scroll = getScrollOffsets();
+			elementToDrag.style.left = (e.clientX + scroll.x - deltaX) + "px";
+			elementToDrag.style.top = (e.clientY + scroll.y - deltaY) + "px";
+
+			// And don't let anyone else see this event.
+			if (e.stopPropagation) e.stopPropagation();  // Standard
+			else e.cancelBubble = true;                  // IE
+		}
+
+		/**
+		 * This is the handler that captures the final mouseup event that
+		 * occurs at the end of a drag.
+		 **/
+		function upHandler(e) {
+			if (!e) e = window.event;  // IE Event Model
+
+			// Unregister the capturing event handlers.
+			if (document.removeEventListener) {  // DOM event model
+				document.removeEventListener("mouseup", upHandler, false);
+				document.removeEventListener("mousemove", moveHandler, false);
+			}
+			else if (document.detachEvent) {  // IE 5+ Event Model
+				elementToDrag.detachEvent("onlosecapture", upHandler);
+				elementToDrag.detachEvent("onmouseup", upHandler);
+				elementToDrag.detachEvent("onmousemove", moveHandler);
+				elementToDrag.releaseCapture();
+			}
+
+			// And don't let the event propagate any further.
+			if (e.stopPropagation) e.stopPropagation();  // Standard model
+			else e.cancelBubble = true;                  // IE
+		}
+	}
+
+	
+	// Return the current scrollbar offsets as the x and y properties of an object
+	function getScrollOffsets(w) {
+		// Use the specified window or the current window if no argument
+		w = w || window;
+
+		// This works for all browsers except IE versions 8 and before
+		if (w.pageXOffset != null) return {x: w.pageXOffset, y:w.pageYOffset};
+
+		// For IE (or any browser) in Standards mode
+		var d = w.document;
+		if (document.compatMode == "CSS1Compat")
+			return {x:d.documentElement.scrollLeft, y:d.documentElement.scrollTop};
+
+		// For browsers in Quirks mode
+		return { x: d.body.scrollLeft, y: d.body.scrollTop };
+	}
+
+	
+	window.onload = function() {
+		var aa = document.getElementById("aa");
+		//aa.scrollTop = 30;
+		var aaa = document.getElementById("aaa");
+		//alert(aaa.getBoundingClientRect());
+		var box = aaa.getBoundingClientRect();
+		
+		//alert(box.top);
+		//alert(aaa.offsetTop);
+		//alert(getElementPosition(aaa).y);
+		//alert(getElementPosition2(aaa).y);
+		//alert(document.body.offsetParent);
+		var container = document.getElementById("container");
+		container.onmousedown = function(event) {
+			drag(this, event);
+		};
+		
+	};
+	
+	function getElementPosition(e) {
+		var x = e.offsetLeft, y = e.offsetTop, parent = e.offsetParent;
+		while (parent.offsetParent) {
+			x += parent.clientLeft + parent.offsetLeft;
+			y += parent.clientTop + parent.offsetTop;
+			parent = parent.offsetParent;
+		}
+		return  {
+			x : x,
+			y : y
+		};
+	}
+	
+	function getElementPosition2(e) {
+		var x = 0, y = 0;
+		while (e.offsetParent) {
+			x += e.offsetLeft ;
+			y += e.offsetTop;
+			e = e.offsetParent;
+			x += e.clientLeft- e.scrollLeft;
+			y += e.clientTop - e.scrollTop;
+		}
+		return {
+			x : x,
+			y : y
+		};
+	}
+	
+	// Make a JSONP request to the specified URL and pass the parsed response
+	// data to the specified callback. Add a query parameter named "jsonp" to
+	// the URL to specify the name of the callback function for the request.
+	function getJSONP(url, callback) {
+		// Create a unique callback name just for this request
+		var cbnum = "cb" + getJSONP.counter++; // Increment counter each time
+		var cbname = "getJSONP." + cbnum;      // As a property of this function
+		
+		// Define the callback function that will be invoked by the script
+		var xxx = function(response) {
+			callback(response); // Handle the response data
+		};
+		
+		// Add the callback name to the url query string using form-encoding
+		// We use the parameter name "jsonp".  Some JSONP-enabled services 
+		// may require a different parameter name, such as "callback".
+		if (url.indexOf("?") === -1)   // URL doesn't already have a query section
+			url += "?jsonp=xxx"; // add parameter as the query section
+		else                           // Otherwise, 
+			url += "&jsonp=xxx"; // add it as a new parameter.
+
+		// Create the script element that will send this request
+		var script = document.createElement("script");
+
+		// Now trigger the HTTP request
+		script.src = url;                  // Set script url
+		document.head.appendChild(script); // Add it to the document
+	}
+
+	getJSONP.counter = 0;  // A counter we use to create unique callback names
+	
+	//getJSONP("http://localhost:8080/JavaWebProject01/resources/data.js?code=abc", function(data) {
+	//	alert(data);
+	//});
+
+	var whenReady = (function() {
+		var funcs = [], ready = false;
+		
+		function handler(e) {
+			if (ready) return;
+			if (e.type === "readystatechange" && document.readyState !== "complete") return;
+			
+			for (var i = 0; i < funcs.length; i++)
+				funcs[i].call(document);
+			
+			funcs = null;
+			ready = true;
+		}
+		
+		if (document.addEventListener) {
+			document.addEventListener("DOMContentLoaded", handler, false);
+			document.addEventListener("readystatechange", handler, false);
+			window.addEventListener("load", handler, false);
+		} else {
+			document.attachEvent("onreadystatechange", handler);
+			window.attachEvent("onload", handler);
+		}
+		
+		return function(f) {
+			if (ready) f.call(document);
+			else funcs.push(f);
+		};
+	}());
+</script>
+<!--
+<script src="linkdetails.js"></script>
+-->
+<body>
+	<!--
+	<form method="post">
+		<input name="userid"/>
+		<input id="sub" type="submit" value="submit"/>
+	</form>
+	
+	<a href="http://www.baidu.com">baidu</a>
+	-->
+	<div id="container" style="border:1px black solid;height:300px;width:300px;background:#eee;position:absolute;">
+		
+		<div id="aa" style="width:200px;height:200px;background:#ccc;border:5px solid black;position:relative;overflow:scroll;">
+			<div id="aaa" style="margin:10px;width:100px;height:250px;background:#aaa;border:5px solid black;"></div>
+		</div>
+	</div>
+	<p>Testing, testing</p>
+</body>
+</html>

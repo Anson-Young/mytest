@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+	/*
+	let p = new Promise(function(resolve, reject) {
+		resolve("aa");
+		resolve("bb");
+		resolve("cc");
+	});
+	
+	p.then(function(data) {
+		console.log(data);
+	}).then(function(data) {
+		console.log(data);
+	});
+	let p = new Promise(function(resolve, reject) {
+		resolve("aa");
+	});
+	
+	p.then(function(data) {
+		//console.log(noData);
+	}).then(function(data) {
+		return new Promise(function(resolve, reject) {
+			$.ajax({
+				//....
+				success : function(data) {
+					resolve(new Promise(function(resolve, reject) {
+						$.ajax({
+							//...
+							success : function(data) {
+								resolve(data);
+							}
+						});
+						
+					}));
+				}
+			});
+			
+		});
+	}, function(reason) {
+		console.log(reason);
+		return "a";
+	}).then(function(data) {
+		console.log(data);
+	});
+	*/
+	
+	/*
+	let p1 = new Promise((resolve, reject) => {
+		setTimeout(resolve, 100, "OK");
+	});
+	p1.then(value => {
+		console.log(value);
+		return "abc";
+	}).then(value => {
+		console.log(value);
+	});
+	
+	let p1 = new Promise((resolve, reject) => {
+		resolve("OK");
+	});
+	
+	let p2 = new Promise((resolve, reject) => {
+		resolve(p1);
+	});
+	
+	//p2.catch(reason => {
+	//	console.log(reason);
+	//});
+	p2.then(value => {
+		console.log(value);
+	});
+	*/
+	
+	Promise.race([
+		new Promise((resolve, reject) => {
+			resolve("A");
+		}),
+		new Promise((resolve, reject) => {
+			reject("B");
+		}),
+		new Promise((resolve, reject) => {
+			resolve("C");
+		})
+	]).then(value => {
+		console.log(value);
+	}, reason => {
+		console.log(reason);
+	});
+	
+</script>
+</head>
+<body>
+</body>
+</html>

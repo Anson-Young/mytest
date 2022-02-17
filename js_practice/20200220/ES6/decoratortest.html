@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.4.4/babel.min.js"></script>
+<script type="text/javascript">
+	let readonly = function(target, name, descriptor){
+		descriptor.writable = false;
+		return descriptor;
+	};
+	
+	class Test {
+		@readonly
+		time() {
+			console.log("2020-03-27");
+		}
+	}
+	
+	let test = new Test();
+	test.time();
+</script>
+</head>
+<body>
+</body>
+</html>

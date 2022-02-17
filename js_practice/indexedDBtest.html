@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<script>
+	window.indexedDB.deleteDatabase("testDB");		// asynchronous
+	//alert(1);
+	let request = window.indexedDB.open("testDB", "1.0");
+	//alert(2);
+	//alert(window.requestFileSystem);
+	
+	//let result = 0;
+	//for (let i = 1; i < 10000000; i++) {
+	//	result += (Math.PI + Math.E) / i;
+	//}
+	
+	//alert(request.onsuccess);
+	
+	request.onsuccess = function(event) {
+		//alert("success!");
+		//alert(event.target === this);		// true
+		//alert(this.result.objectStoreNames.length);
+		//alert(1);
+		//get(this.result);
+		//alert(2);
+		
+		let db = event.target.result;
+		
+		console.log(db);
+		
+		insert(db, "students", {
+			"id" : "001",
+			"name" : "Anson",
+			"age" : 32,
+			"email" : "2257954@qq.com"
+		});
+		//alert(123);
+		get(db);		// asynchronous
+		//alert(456);
+	};
+	
+	request.onerror = function(event){
+		alert("打开失败,错误号：" + event.target);
+		//console.log(event.target);
+	};
+	
+	
+	request.onupgradeneeded = function() {
+		let db = this.result;
+		if (!db.objectStoreNames.contains("students")) {
+			let objectStore = db.createObjectStore("students", {keyPath : "id"});
+			objectStore.createIndex("email", "email", {unique : true});
+		}
+		//alert("upgrade done!");
+		//alert(typeof db.objectStoreNames);	
+		
+	};
+
+	
+	function insert(db, objectStoreName, data) {
+		let transaction = db.transaction(objectStoreName, "readwrite");		// synchronous
+		//alert(789);
+		let objectStore = transaction.objectStore(objectStoreName);
+		let request = objectStore.add(data);
+		request.onsuccess = function(e) {
+			//alert(this === e.target);
+		};
+	}
+	
+	
+	function get(mydb){
+		var transaction = mydb.transaction('students','readwrite');
+		transaction.oncomplete = function(event) {};
+		transaction.onerror = function(event) {};
+		transaction.onabort = function(event){};
+		var objStore = transaction.objectStore('students');
+		var request = objStore.get("001");                 //按照id查询
+		request.onsuccess=function(e){
+			alert(e.target.result.name +  e.target.result.age + e.target.result.email);
+		}
+	}
+  
+</script>
+<body>
+	
+</body>
+</html>

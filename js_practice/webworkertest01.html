@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<script>
+	window.addEventListener("load", function() {
+		let btn = document.getElementById("btn");
+		btn.addEventListener("click", function() {
+			let worker = new Worker("webworkertest01.js");
+			worker.addEventListener("message", function(event) {
+				this.terminate();
+				alert(event.data);
+			}, false);
+			worker.postMessage(1000);
+			worker.addEventListener("error", function(e) {
+				alert(e.lineno);
+			});
+		}, false);
+		
+		let btn2 = document.getElementById("btn2");
+		btn2.addEventListener("click", function() {
+			alert(234);
+		}, false);
+	}, false);
+	
+</script>
+<body>
+	<input type="button" value="btn" id="btn"/>
+	<input type="button" value="btn2" id="btn2"/>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<script src="js/jquery.js"></script>
+<script>
+	$(function(){
+		var response = [{
+			id : "",
+			participantId : "1234",
+			text : "",
+			mfpsId : "1234",
+			fundFamilyBrandName : "NAME1"
+		}, {
+			id : "",
+			participantId : "2345",
+			text : "",
+			mfpsId : "2345",
+			fundFamilyBrandName : "NAME2"
+		}];
+		
+		$.map(response, function(item){
+			item.id = item.mfpsId;
+			// Set default value is Unknown
+			var mcName = item.fundFamilyBrandName ? item.fundFamilyBrandName
+					: 'Unknown';
+			item.text = item.participantId
+					+ ' - ' + mcName;
+			return item;
+		});
+		
+		var arr = [];
+		
+		/*
+		var obj = {};
+		var str = "abc";
+		obj[str] = "defasdfsadfs";
+		alert(obj.abc);
+		*/
+		
+		for(i in response){
+			//alert(item);
+			var temp = {};
+			temp[response[i].id] = response[i].text;
+			arr.push(temp);
+		}
+		
+		alert(JSON.stringify(arr));
+	});
+</script>
+<body>
+	&lt;span&gt;abcd&lt;/span&gt;
+</body>
+</html>

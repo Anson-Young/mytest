@@ -1,0 +1,2227 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="MyPromise.js"></script>
+<script src="co.js"></script>
+<script src="co2.js"></script>
+
+<script src="MyCo.js"></script>
+
+<script>
+			
+	"use strict";
+	window.addEventListener("load", () => {
+		/*
+		let template = `
+			<ul>
+			<% for (let i = 0; i < data.suppliers.length; i++) { %>
+				<li><%= data.suppliers[i] %></li>
+			<% } %>
+			</ul>
+		`;
+		
+		function compile(template) {
+			let evalExpr = /<%=(.+?)%>/g;
+			let expr = /<%([\s\S]+?)%>/g;
+			
+			template = template.replace(evalExpr, "`); \n echo( $1 ); \n echo(`")
+								.replace(expr, "`); \n $1 \n echo(`");
+			template = "echo(`" + template + "`)";
+			
+			let script = `(data => {
+				let output = "";
+				function echo(html) {
+					output += html;
+				}
+				${template}
+				return output;
+			})`;
+			
+			return script;
+		}
+		
+		let parse = eval(compile(template));
+		document.getElementsByTagName("div")[0].innerHTML = parse({suppliers : ["Anson", "Tina", "Jack"]});
+		
+		let total = 30;
+		console.log(passthru2`The total is ${total} (${total * 1.05} with tax).`);
+		
+		function passthru(literals) {
+			let result = "", i = 0;
+			
+			while (i < literals.length) {
+				result += literals[i++];
+				if (i < arguments.length) {
+					result += arguments[i];
+				}
+			}
+			
+			return result;
+		}
+		
+		function passthru2(literals, ...values) {
+			let result = "", i = 0;
+			
+			for (i = 0; i < values.length; i++) {
+				result += literals[i] + values[i];
+			}
+			
+			result += literals[i];
+			return result;
+		}
+		
+		let sender = "<script>alert('123')<\/script>";
+		console.log(saferHTML`<p>${sender} has sent you a message.</p>`);
+		
+		
+		function saferHTML(templateData) {
+			let result = templateData[0];
+			
+			for (let i = 1; i < arguments.length; i++) {
+				result += arguments[i].replace(/&/g, "&amp;")
+										.replace(/</g, "&lt;")
+										.replace(/>/g, "&gt;");
+			}
+			return result += templateData[1];
+		}
+		
+		//alert(/a[^]b/.test("aeb"));
+		//alert("%foo $foo $foo".replace(/(?<=\$)foo/g, "bar"));
+		//alert(/.*aa/g.test("eraab"));
+		var s ="abbbaabbbaaabbb1234";
+		var re1=/.*bbb/g;
+		//alert(re1.test("abbbaabbbaaabbb1234"));
+		const reg = /^(?<as>a+)?$/;
+		//alert(reg.exec("aaa").groups.as);
+		//alert("as" in reg.exec("aaa").groups);
+		
+		//alert(Number.isNaN(15));
+		//alert(+-0 === 0);
+		
+		const pipeline = (...funcs) => val => funcs.reduce((a, b) => b(a), val);
+		
+		//alert(pipeline(a => a + 1, a => a * 2)(6));
+		
+		function factorial(n, total) {
+			if (n === 1) return total;
+			return factorial(n - 1, n * total);
+		}
+		
+		//alert(factorial(5, 1));
+		
+		function fibonacci(n, temp = 1, result = 1) {
+			if (n <= 2) return result;
+			return fibonacci(n - 1, result, temp + result);
+		}
+		//alert(fibonacci(1000));
+		
+		function fibonacci2(n) {
+			if (n <= 2) return 1;
+			return fibonacci2(n - 2) + fibonacci2(n - 1);
+		}
+		//alert(fibonacci2(10));
+		
+		function sum(x, y) {
+			if (y > 0) {
+				return sum(x + 1, y - 1);
+			} else {
+				return x;
+			}
+		}
+		//alert(sum(1, 100000));
+		
+		function sum2(x, y) {
+			if (y > 0) {
+				return sum2.bind(null, x + 1, y - 1);
+			}
+			return x;
+		}
+		
+		function trampoline(f) {
+			while (f && typeof f === "function") {
+				f = f();
+			}
+			return f;
+		}
+		
+		//alert(trampoline(sum2(1, 100000)));
+		//alert(trampoline((function sum3(x, y) {
+		//	if (y > 0) {
+		//		return sum3.bind(null, x + 1, y - 1);
+		//	}
+		//	return x;
+		//}(1, 1000000))));
+		
+		function tco(f) {
+			let active = false, accumulated = [];
+			
+			return function accumulator() {
+				accumulated.push(arguments);
+				
+				if (!active) {
+					active = true;
+					let value;
+					while (accumulated.length) {
+						value = f.apply(this, accumulated.shift());
+					}
+					active = false;
+					return value;
+				}
+			};
+		}
+		
+		let sum4 = tco(function(x, y) {
+			if (y > 0) {
+				return sum4(x + 1, y - 1);
+			}
+			return x;
+		});
+		
+		alert(sum4(1, 300000));
+		alert(sum4(1, 400000));
+		
+		Function.prototype.bindOther = function(context){
+			var args = Array.prototype.slice.call(arguments,1),
+				self = this,
+				//F = function(){},
+				bound = function(){
+					var innerArgs = Array.prototype.slice.call(arguments);
+					var finalArgs = args.concat(innerArgs);
+					//console.log(this !== window);
+					if (this !== window) {
+						//bound.prototype = self.prototype;
+						//bound.prototype.constructor = self;
+						//return self.apply(this, finalArgs);
+						return new self(finalArgs);
+						//return;
+					}
+					return self.apply(context, finalArgs);
+				};
+			bound.prototype = undefined;
+			Object.defineProperty(bound, "length", {
+				value: self.length - args.length,
+				writable : true
+			});
+			//F.prototype = self.prototype;
+			//bound.prototype = new F();
+			//bound.prototype = this.prototype;
+			return bound;
+		};
+		//alert(new Date(2010, 1, 2));
+		var date = new (Date.bindOther.apply(Date, [null, 2020, 8, 6]));
+		//console.log(date.__proto__.constructor === date.constructor);
+		//alert(Date.apply(new Date.bind(Date), 2010, 1, 2));
+		//alert(["a", "b", 1].slice());
+		//alert(1 / 0 === 1 / +0);	// true
+		
+		//alert(Object.getOwnPropertyDescriptor({a : 1, b : 2}, "a").enumerable);
+		
+		let o = Object.create({p : 1});
+		//alert(Object.keys(o));
+		for (let p in o) {
+			//alert(o[p]);
+		}
+		
+		let map = new Map([["a", 1], ["b", 2]]);
+		//alert(map.get("b"));
+		
+		function* entries(obj) {
+			for (let key of Object.keys(obj)) {
+				yield [key, obj[key]];
+			}
+		}
+		
+		function entries2(obj) {
+			let arr = [];
+			for (let key of Object.keys(obj)) {
+				arr.push([key, obj[key]]);
+			}
+			return arr;
+		}
+		
+		let {a, ...b} = {a : 1, c : 2, d : 3};
+		//alert(b.c);
+		
+		let obj = {
+			...{
+				get x() {
+					//alert(23);
+				}
+			},
+			get bar() {
+				return "abc";
+			},
+			p : 3
+		};
+		
+		//alert(obj.bar);	// abc
+		
+		const clone = Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj));
+		
+		//alert(Object.getOwnPropertyDescriptor(clone, "p").enumerable);
+		
+		let size = Symbol("size");
+		
+		class Collection {
+			constructor() {
+				this[size] = 0;
+			}
+			
+			add(item) {
+				this[this[size]] = item;
+				this[size]++;
+			}
+			
+			static sizeOf(instance) {
+				return instance[size];
+			}
+		}
+		
+		let x = new Collection();
+		x.add("abc");
+		x.add(1);
+		//alert(x[0]);
+		//alert(Object.prototype.toString.call(Object.values(x)).slice(8, -1));
+		//alert(Collection.sizeOf(x));
+		
+		let map = new Map();
+		let a = 1;
+		map.set("a", a);
+		a = 2;
+		alert(map.get("a"));
+		
+		let target = {};
+		let proxy = new Proxy(target, {
+			get : function(target, property) {
+				return 30;
+			}
+		});
+		
+		//proxy.a = 1;
+		//alert(target.a);
+		//alert(proxy.b);
+		
+		function createArray(...elements) {
+			let handler = {
+				get : function(target, propKey, receiver) {
+					let index = Number(propKey);
+					if (index < 0) {
+						propKey = String(index + target.length);
+						//return target[index + target.length];
+					}
+					return Reflect.get(target, propKey, receiver);
+					//return target[index];
+				}
+			};
+			
+			let target = [];
+			target.push(...elements);
+			return new Proxy(target, handler);
+		}
+		
+		let arr = [98, 34, 8];
+		//alert(createArray(98, 34, 8)[-2]);
+		
+		let a = [0, 4, 5];
+		
+		//alert(a.concat(6, 7));
+		//alert(...[a]);
+		//console.log(...[1, 2, 4]);
+		
+		const pipe = function(value) {
+			
+			let funcStack = [];
+			let oproxy = new Proxy({}, {
+				get(target, method) {
+					if (method === "get") {
+						return funcStack.reduce(function(val, fn) {
+							return fn(val);
+						}, value);
+					}
+					funcStack.push(funcs[method]);
+					return oproxy;
+				}
+			});
+			
+			return oproxy;
+			
+		};
+		
+		let funcs = {
+			double(n) {
+				return n * 2
+			},
+			pow(n) {
+				return n * n;
+			},
+			reverseInt(n) {
+				return n.toString().split("").reverse().join("") | 0;
+			}
+		};
+		
+		//alert(pipe(6).double.pow.reverseInt.get);
+		alert("00284181991" | 0);
+		
+		const dom = new Proxy({}, {
+			get(target, property) {
+				return function(attr = {}, ...children) {
+					let elem = document.createElement(property);
+					for (let key of Object.keys(attr)) {
+						elem[key] = attr[key];
+					}
+					for (let child of children) {
+						if (typeof child === "string") {
+							child = document.createTextNode(child);
+						}
+						elem.appendChild(child);
+					}
+					return elem;
+				};
+			}
+		});
+		
+		document.body.appendChild(dom.div({}, "Hello, my name is ", dom.a({href : "http://example.com"}, "Anson"), ". I like:", dom.ul({}, dom.li({}, "The web"), dom.li({}, "Food"), dom.li({}, "...actually that's it"))));
+		
+		let twice = {
+			apply(target, ctx, args) {
+				return Reflect.apply(...arguments) * 2;
+			}
+		};
+		
+		function sum(x, y) {
+			return x + y;
+		}
+		let proxy = new Proxy(sum, twice)(1, 2);
+		//alert(proxy);
+		
+		let p = new Proxy({}, {
+			preventExtensions(target) {
+				Object.preventExtensions(target);
+				return true;
+			}
+		});
+		
+		Object.preventExtensions(p);
+		
+		let target = {foo : 1};
+		let {proxy, revoke} = Proxy.revocable(target, {});
+		alert(target.foo);
+		revoke();
+		alert(proxy.foo);
+		
+		let ages = [11, 33, 12, 54, 19, 96];
+		const youngest = Math.min.apply(Math, ages);
+		//alert(youngest);
+		//alert(Object.prototype.toString.apply(youngest));
+		//alert(Reflect.apply(Object.prototype.toString, youngest, []));
+		
+		//alert(Date.now());
+		
+		const queuedObservers = new Set();
+		const observe = fn => queuedObservers.add(fn);
+		const observable = obj => new Proxy(obj, {set});
+		function set(target, prop, val, receiver) {
+			let result = Reflect.set(target, prop, val, receiver);
+			queuedObservers.forEach(observe => observe());
+			return result;
+		}
+		observe(function() {
+			alert("a");
+		});
+		observe(function() {
+			alert("b");
+		});
+		let o = {p : 1};
+		let proxy = observable(o);
+		proxy.p = 2;
+		alert(proxy.p);
+		alert(o.p);
+		
+		function timeout(ms) {
+			return new Promise(function(resolve, reject) {
+				setTimeout(resolve, ms, "done");
+			});
+		}
+		
+		timeout(100).then(value => {
+			console.log(value);
+		});
+		
+		function loadImage(url) {
+			return new Promise((resolve, reject) => {
+				let image = new Image();
+				image.onload = () => {
+					resolve(image);
+				};
+				image.onerror = () => {
+					reject(new Error("Could not load image at " + url));
+				};
+				image.src = url;
+			});
+		}
+		
+		loadImage("xxx").then(image => {
+			document.body.appendChild(image);
+		}, reason => {
+			console.log(reason);
+		});
+		
+		let getJSON = url => new Promise((resolve, reject) => {
+			let client = new XMLHttpRequest();
+			client.open("get", url);
+			client.onreadystatechange = handler;
+			client.responseType = "json";
+			client.setRequestHeader("Accept", "application/json");
+			client.send();
+			
+			function handler() {
+				if (this.readyState !== 4) return;
+				if (this.status === 200) {
+					resolve(this.response);
+				} else {
+					reject(new Error(this.statusText));
+				}
+			}
+		});
+		
+		getJSON("xxx").then(value => {
+			console.log(value);
+		}, reason => {
+			console.log(reason);
+		});
+		*/
+		
+		/*
+		let p1 = new Promise((resolve, reject) => {
+			resolve("OK");
+		});
+		
+		let p2 = new Promise((resolve, reject) => {
+			resolve(p1);
+		});
+		
+		p2.then(value => {
+			console.log(value);
+		});
+		
+		let p1 = new MyPromise((resolve, reject) => {
+			resolve("OK");
+		});
+		
+		let p2 = p1.then("xxxx");
+		
+		p2.then(value => {
+			console.log(value);
+		});
+		*/
+		
+		
+		
+		/*
+		let p1 = new Promise((resolve, reject) => {
+			//resolve("OK");
+			reject("error");
+		});
+		let p2 = p1.then(value => {
+			console.log(value);
+			return new Promise((resolve, reject) => {
+				resolve("Hello");
+			});
+		});
+		p1.then(value => {
+			console.log(value);
+		});
+		p1.then(value => {
+			console.log(value);
+		});
+		
+		p1.catch((reason) => {
+			console.log(reason);
+			return new Promise((resolve, reject) => {
+				resolve("Hello");
+			});
+		});
+		p1.then(value => {
+			console.log(value);
+		});
+		p1.catch((reason) => {
+			console.log(reason);
+		});
+		*/
+		
+		/*
+		let p1 = new MyPromise((resolve, reject) => {
+			reject("error");
+		});
+		
+		let p2 = new MyPromise((resolve, reject) => {
+			resolve(p1);
+		});
+		
+		p2.catch(reason => {
+			console.log(reason);
+		});
+		*/
+		
+		/*
+		let p1 = new MyPromise((resolve, reject) => {
+			setTimeout(resolve, 100, "OK");
+		});
+		p1.then(value => {
+			console.log(value);
+			return new MyPromise((resolve, reject) => {
+				setTimeout(resolve, 50, "Hello");
+			});
+			//return "Abc";
+		}).then(value => {
+			console.log(value);
+		});
+		*/
+		/*
+		p1.then(value => {
+			console.log(value);
+		});
+		p1.then(value => {
+			console.log(value);
+		});
+		*/
+		/*
+		let p1 = new MyPromise((resolve, reject) => {
+			//reject("error");
+			resolve("OK");
+		});
+		
+		let p2 = new MyPromise((resolve, reject) => {
+			resolve(p1);
+		});
+		
+		//p2.catch(reason => {
+		//	console.log(reason);
+		//});
+		p2.then(value => {
+			console.log(value);
+		});
+		
+		MyPromise.race([
+			new MyPromise((resolve, reject) => {
+				setTimeout(() => {
+					resolve("A");
+				}, 10);
+				
+			}),
+			new MyPromise((resolve, reject) => {
+				setTimeout(() => {
+					reject("B");
+				}, 50);
+			})
+		]).then(value => {
+			console.log(value);
+		}, reason => {
+			console.log(reason);
+		});
+		
+		let p1 = new MyPromise((resolve, reject) => {
+			//setTimeout(resolve, 100, "OK");
+			resolve("OK");
+			//reject("No");
+		});
+		p1.then(value => {
+			console.log(value);
+			throw new Error("error");
+			return new MyPromise((resolve, reject) => {
+				setTimeout(resolve, 50, "Hello");
+				//setTimeout(reject, 50, "Error");
+			});
+			//return "Abc";
+		}, reason => {
+			console.log(reason + "abc");
+			return new MyPromise((resolve, reject) => {
+				setTimeout(resolve, 10, "Hi");
+			});
+		}).then(value => {
+			console.log(value);
+		}, reason => {
+			console.log(reason);
+		});
+		
+		let p1 = new Promise((resolve, reject) => {
+			//resolve("OK");
+			reject("Error");
+		});
+		
+		let p2 = new Promise((resolve, reject) => {
+			//resolve(p1);
+			reject(p1);
+		});
+		
+		p2.then(value => {
+			console.log(value);
+		}, reason => {
+			console.log(reason);
+		});
+		
+		let p = new MyPromise((resolve, reject) => {
+			resolve("OK");
+		});
+		p.then(value => {
+			console.log(value);
+			return "Hello";
+		}).finally(() => {
+			console.log("finally");
+		}).then(value => {
+			console.log(value);
+		});
+		
+		let p = new MyPromise((resolve, reject) => {
+			resolve("OK");
+		});
+		p.then(value => {
+			console.log(value);
+			return "Hello";
+		}).then(value => {
+			console.log(value);
+		});
+		
+		let p = new MyPromise((resolve, reject) => {
+			resolve("OK");
+		});
+		p.then(value => {
+			console.log(value);
+			return "Hello";
+		}).finally(() => {
+			console.log("finally");
+		}).then(value => {
+			console.log(value);
+		});
+		
+		const preloadImage = url => new MyPromise((resolve, reject) => {
+			let image = new Image();
+			image.onload = resolve;
+			image.onerror = reject;
+			image.src = url;
+		});
+		
+		const makeIterator = array => {
+			let index = 0, len = array.length;
+			return {
+				next() {
+					return {
+						value : array[index++],
+						done : index > len
+					};
+					
+				}
+			};
+		};
+		
+		let iterator = makeIterator(["a", "b"]);
+		console.log(iterator.next());
+		console.log(iterator.next());
+		console.log(iterator.next());
+		
+		const obj = {
+			[Symbol.iterator] : function() {
+				return {
+					next() {
+						return {
+							value : 1,
+							done : true
+						};
+					}
+				};
+			}
+		};
+		
+		//alert(obj[Symbol.iterator]().next().value);
+		
+		class Obj {
+			constructor(value) {
+				this.value = value;
+			}
+			
+			[Symbol.iterator]() {
+				let self = this;
+				return {
+					next() {
+						if (!self) return {done : true};
+						let value = self.value;
+						self = self.next;
+						return {
+							value : value,
+							done : false
+						};
+					}
+				};
+			}
+		}
+		
+		let one = new Obj(1);
+		let two = new Obj(2);
+		let three = new Obj(3);
+		one.next = two;
+		two.next = three;
+		
+		
+		let iterator = one[Symbol.iterator]();
+		console.log(iterator.next());
+		console.log(iterator.next());
+		console.log(iterator.next());
+		console.log(iterator.next());
+		console.log(iterator.next());
+		
+		for (let o of one) {
+			console.log(o);
+		}
+		
+		function readLineSync(file) {
+			return {
+				[Symbol.iterator]() {
+					return {
+						next() {
+							return { value : "xxx", done : false };
+						},
+						return() {
+							file.close();
+							return { done : true };
+						}
+					};
+				}
+			};
+		}
+		
+		for (let line of readLineSync({close(){ console.log("abc") }})) {
+			console.log(line);
+			break;
+		}
+		
+		let arr = ["red", "green", "blue"];
+		let obj = {};
+		obj[Symbol.iterator] = arr[Symbol.iterator].bind(arr);
+		for (let elem of obj) {
+			console.log(elem);
+		}
+		
+		let obj = {
+			*[Symbol.iterator]() {
+				yield "hello";
+				yield "world";
+			}
+		};
+		
+		for (let e of obj) {
+			console.log(e);
+		}
+		
+		function *entries(obj) {
+			for (let key of Object.keys(obj)) {
+				yield [key, obj[key]];
+			}
+		}
+		
+		for (let [key, value] of entries({ a : 1, b : 2})) {
+			console.log(key, "->", value);
+			break;
+		}
+		
+		function getFoo() {
+			return new Promise((resolve, reject) => {
+				resolve("foo");
+			});
+		}
+		
+		let g = function* () {
+			try {
+				let foo = yield getFoo();
+				console.log(foo);
+			} catch(e) {
+				console.log(e);
+			}
+		};
+		
+		function run(generator) {
+			let it = generator();
+			
+			function go(result) {
+				if (result.done) return result.value;
+				return result.value.then(value => go(it.next(value)), error => go(it.throw(error)));
+			}
+			
+			go(it.next()).then(value => console.log(value));
+		}
+		
+		run(g);
+		
+		function wrapper(genFunc) {
+			return function(...args) {
+				let generator = genFunc(...args);
+				generator.next();
+				return generator;
+			};
+		}
+		
+		let wrapped = wrapper(function* () {
+			console.log(`First input: ${yield}`);
+			return "DONE";
+		});
+		
+		console.log(wrapped().next("hello!").value);
+		
+		function* dataConsumer() {
+			console.log("Started");
+			console.log(`1. ${yield}`);
+			console.log(`2. ${yield}`);
+			return "result";
+		}
+		
+		let genObj = dataConsumer();
+		genObj.next();
+		genObj.next("a");
+		console.log(genObj.next("b").value);
+		
+		function* fibonacciGen() {
+			let [prev, curr] = [0, 1];
+			for (;;) {
+				[prev, curr] = [curr, prev + curr];
+				yield prev;
+			}
+		}
+		
+		let gen = fibonacciGen();
+		console.log(gen.next().value);
+		console.log(gen.next().value);
+		console.log(gen.next().value);
+		console.log(gen.next().value);
+		console.log(gen.next().value);
+		console.log(gen.next().value);
+		console.log(gen.next().value);
+		
+		function* iterTree(tree) {
+			if (Array.isArray(tree)) {
+				for (let elem of tree) {
+					yield* iterTree(elem);
+				}
+			} else {
+				yield tree;
+			}
+		}
+		
+		for (let e of iterTree([1, [2, 4], [45, [53, 6]]])) {
+			console.log(e);
+		}
+		
+		class Tree {
+			constructor(root) {
+				this.root = root;
+			}
+			
+			add(elem) {
+				if (elem <= this.root) {
+					if (this.leftTree) {
+						this.leftTree.add(elem);
+					} else {
+						this.leftTree = new Tree(elem);
+					}
+				} else {
+					if (this.rightTree) {
+						this.rightTree.add(elem);
+					} else {
+						this.rightTree = new Tree(elem);
+					}
+				}
+			}
+		}
+		
+		let tree = new Tree(66);
+		tree.add(45);
+		tree.add(33);
+		tree.add(67);
+		tree.add(100);
+		tree.add(3);
+		tree.add(47);
+		tree.add(63);
+		tree.add(377);
+		tree.add(98);
+		//console.log(tree.leftTree);
+		
+		function* iterTree(tree) {
+			if (tree) {
+				yield* iterTree(tree.leftTree);
+				yield tree.root;
+				yield* iterTree(tree.rightTree);
+			}
+		}
+		
+		for (let o of iterTree(tree)) {
+			console.log(o);
+		}
+		
+		function Tree2(left, label, right) {
+			this.left = left;
+			this.label = label;
+			this.right = right;
+		}
+		
+		function* inorder(t) {
+			if (t) {
+				yield* inorder(t.left);
+				yield t.label;
+				yield* inorder(t.right);
+			}
+		}
+		
+		function make(array) {
+			if (array.length === 1) return new Tree2(null, array[0], null);
+			return new Tree2(make(array[0]), array[1], make(array[2]));
+		}
+		
+		let tree2 = make([[1], 2, [3]]);
+		//console.log(tree2);
+		for (let e of inorder(tree2)) {
+			//console.log(e);
+		}
+		
+		try {
+			setTimeout(() => {
+				throw new Error("error");
+			}, 1000);
+		} catch(e) {
+			alert(e);
+		}
+		
+		window.onerror = e => {
+			alert(e);
+		};
+		
+		var Trunk = function(fn) {
+			return function() {
+				var args = Array.prototype.slice.call(arguments);
+				return function(callback) {
+					args.push(callback);
+					return fn.apply(this, args);
+				};
+			};
+		};
+		
+		const Trunk2 = fn => (...args) => callback => fn.call(this, ...args, callback);
+		
+		function f(a, cb) {
+			cb(a);
+		}
+		
+		let func = Trunk(f);
+		func(1495)(console.log);
+		
+			const trunkify = fn => (...args) => done => {
+			let called;
+			try {
+				fn.call(this, ...args, (...args2) => {
+					if (called) return;
+					called = true;
+					done.call(undefined, ...args2);
+				});
+			} catch(e) {
+				done(e);
+			}
+		};
+		
+		function f(a, b, callback) {
+			let sum = a + b;
+			callback(sum);
+			//callback(sum);
+		}
+		
+		let ft = trunkify(f);
+		ft(5, 16)(console.log);
+		
+		function* gen() {
+			
+		}
+		
+		let g = gen();
+		let result = g.next();
+		while (!result.done) {
+			console.log(result.value);
+			result = g.next();
+		}
+		
+		let fs = require("fs");
+		let trunkify = require("trunkify");
+		let readFileTrunk = trunkify(fs.readFile);
+		
+		const gen = function* () {
+			let v1 = yield readFileTrunk("path1");
+			console.log(v1.toString());
+			let v2 = yield readFileTrunk("path2");
+			console.log(v2.toString());
+		};
+		
+		let g = gen();
+		let result1 = g.next();
+		result1.value((err, data) => {
+			if (err) throw err;
+			let result2 = g.next(data);
+			result2.value((err, data) => {
+				if (err) throw err;
+				g.next(data);
+			});
+		});
+		
+		function run(fn) {
+			let gen = fn();
+			
+			function next(err, data) {
+				let result = gen.next(data);
+				if (result.done) return;
+				result.value(next);
+			}
+			
+			next();
+		}
+		
+		function* gen() {
+			
+		}
+		
+		var Trunk = function(fn) {
+			return function() {
+				var args = Array.prototype.slice.call(arguments);
+				return function(callback) {
+					args.push(callback);
+					//alert(this.a);
+					return fn.apply(this, args);
+				};
+			};
+		};
+		
+		function fn(a, cb) {
+			cb(a);
+		}
+		
+		var obj = {
+			a : 1
+		};
+		
+		var trunk = Trunk(fn);
+		//trunk(3).bind(obj)(console.log.bind(console));
+		
+		const Trunk2 = fn => (...args) => callback => {
+			//alert(this);	// window	
+			return fn.call(this, ...args, callback);
+		}
+		
+		let trunk2 = Trunk2(fn);
+		//trunk2(5 + 3)(console.log);
+		
+		const trunkify = fn => (...args) => callback => {
+			let called;
+			
+			try {
+				return fn.call(null, ...args, (...otherArgs) => {
+					if (called) return;
+					called = true;
+					//alert(this);	// window
+					return callback.call(null, ...otherArgs);
+				});
+			} catch(err) {
+				callback(err);
+			}
+		};
+		
+		function compute(a, b, callback) {
+			let sum = a + b;
+			callback(sum);
+			callback(sum);
+		}
+		
+		let trunk3 = trunkify(compute);
+		trunk3(7, 5)(console.log);
+		
+		function run(g) {
+			let gen = g();
+			//let result = gen.next();
+			//result.value(next);
+			
+			function next(err, data) {
+				if (err) throw err;
+				let res = gen.next(data);
+				if (res.done) return res.value;
+				res.value(next);
+			}
+			
+			next();
+		}
+		
+		let trunk = trunkify(fn);
+		
+		function* gen() {
+			let r1 = yield trunk("xxx");
+		}
+		
+		run(gen);
+		
+		let readFile = fileName => new Promise((resolve, reject) => {
+			fs.readFile(fileName, (err, data) => {
+				if (err) reject(err);
+				resolve(data);
+			});
+		});
+		
+		function* gen() {
+			let v1 = yield readFile("fileName1");
+			let v2 = yield readFile("fileName2");
+		}
+		
+		function run(g) {
+			let gen = g();
+			
+			function next(data) {
+				let res = gen.next(data);
+				if (res.done) return res.value;
+				res.value.then(val => next(val));
+			}
+			
+			next();
+		}
+		
+		run(gen);
+		
+		let gen = function* () {
+			try {
+				yield;
+			} catch(e) {
+				console.log("inner catch: " + e);
+			}
+		};
+		
+		let g = gen();
+		g.next();
+		
+		try {
+			g.throw("a");
+			g.throw("b");
+		} catch(e) {
+			console.log(`outer catch: ${e}`);
+		}
+		
+		function* gen() {
+			yield 1;
+		}
+		
+		function Run() {
+			
+		}
+		
+		Run.prototype = gen.prototype;
+		
+		//console.log(gen.next);
+		//console.log(f.constructor);
+		
+		//console.log(new Run().next);
+		
+		//alert(isGeneratorFunction(new Run()));
+		//alert((new Run()).next());
+		
+		function* generator1() {
+			let a = 1 + 2;
+		}
+		
+		let g1 = generator1();
+		//console.log(g1.next());
+		
+		
+		function isGenerator(obj) {
+			return 'function' == typeof obj.next && 'function' == typeof obj.throw;
+		};
+
+		
+		function isGeneratorFunction(obj) {
+			var constructor = obj.constructor;    // generator函数的constructor就是GeneratorFunction函数(constructor: GeneratorFunction函数)
+			if (!constructor) return false;    // 如果假值, 则直接return
+			if ('GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName) return true;   // constructor函数的name属性为GeneratorFunction或者displayName属性为'GeneratorFunction' 则obj就是Generator函数
+			return isGenerator(constructor.prototype);    // 检查constructor.prototype是否是遍历器对象
+		};
+		
+		function* gen() {
+			yield 1;
+			
+		}
+		
+		//co(gen);
+		
+		function* gen() {
+			//yield 1;
+			
+		}
+		
+		function f() {}
+		
+		function* gen2() {
+			yield gen();
+		}
+		let g = gen();
+		let cons = g.constructor;
+		console.log(cons);
+		//console.log(cons.prototype.constructor);
+		console.log(cons.prototype);
+		//console.log(gen().constructor.prototype);
+		//console.log(gen.prototype);
+		//console.log(new f().constructor.prototype);
+		//alert(cons.prototype.next);
+		//alert(new f().constructor);
+		co(gen2);
+		
+		//alert(f.prototype.constructor === f);	// true
+		//alert(new f() === f.prototype);	// false
+		//alert(f.prototype === Function.prototype);	// false
+		//alert(f.constructor.prototype === Function.prototype);	// true
+		//alert(Function.prototype.constructor === Function);
+		
+		//alert(new f().constructor === f.prototype.constructor);
+		
+		var o = new h();
+		o.contructor = k;
+		f.prototype = o;
+		
+		function h() {}
+		function k() {}
+		console.log(o.constructor);
+		console.log(f.prototype);
+		
+		var obj = {a : 2};
+		console.log(obj);
+		
+		
+		function X() {}
+		function Y() {}
+		
+		X.prototype = Object.create(Date.prototype);
+		console.log(new X().constructor);
+		
+		function* genX() {
+			try {
+				yield 1;
+			} catch(e) {
+				console.log(`inner error: ${e}`);
+			}
+		}
+		
+		let gX = genX();
+		gX.next();
+		try {
+			gX.throw(new Error());
+		} catch(e) {
+			console.log(`outer error: ${e}`);
+		}
+		
+		console.log("rest code...");
+		
+		async function asyncPrint(value, ms) {
+			await new Promise(resolve => {
+				setTimeout(resolve, ms);
+			});
+			console.log(value);
+		}
+		
+		//asyncPrint("hello world", 1000);
+		
+		function f(a, b, cb) {
+			cb(null, a + b, a * b);
+			cb(null, a + b, a * b);
+		}
+		
+		let trunkify = fn => (...args) => callback => {
+			let called;
+			return fn.call(this, ...args, (...cbArgs) => {
+				if (called) return;
+				called = true;
+				return callback.call(this, ...cbArgs);
+			});
+		};
+		
+		let trunk = trunkify(f);
+		//trunk(3, 5)(console.log.bind(console));
+		
+		function* gen() {
+			
+			let x = yield {
+				a : "Aa",
+				b : new MyPromise((resolve, reject) => {
+					setTimeout(resolve, 100, "hello");
+					//setTimeout(reject, 100, "Error");
+					//reject("Error2");
+				})
+			};
+			
+			let z = yield function(a) {a(null, 4)};
+			let y = yield trunk(...z, 5);
+			let ret = yield [
+				new MyPromise((resolve, reject) => {
+					//setTimeout(reject, 50, "error");
+					setTimeout(resolve, 30, z);
+				}),
+				new MyPromise((resolve, reject) => {
+					//setTimeout(reject, 50, "error");
+					setTimeout(resolve, 35, x.b);
+				}),
+				new MyPromise((resolve, reject) => {
+					setTimeout(resolve, 40, y);
+				})
+			];
+			yield 1;
+			return ret;
+		}
+		
+		let promise = MyCo(gen);
+		//promise.then(value => console.log(`success: ${value}`)).catch(err => console.log("failed: " + err));
+		
+		//let p = new MyPromise((resolve, reject) => {
+		//	reject("error");
+		//});
+		
+		//p.then(value => console.log(value));
+		
+		//MyPromise.resolve().then(value => console.log(value));
+		
+		function chainAnimationPromise(elem, animations) {
+			let ret = null;
+			
+			let p = Promise.resolve();
+			
+			for (let anim of animations) {
+				p = p.then(value => {
+					ret = value;
+					return anim(elem);
+				});
+			}
+			
+			return p.catch().then(() => ret);
+		}
+		
+		function chainAnimationGenerator(elem, animations) {
+			return spawn(function* () {
+				let ret = null;
+				try {
+					for (let anim of animations) {
+						ret = yield anim(elem);
+					}
+				} catch(e) {
+					
+				}
+				return ret;
+			});
+		}
+		
+		function chainAnimationAsync(elem, animations) {
+			return async function() {
+				let ret = null;
+				try {
+					for (let anim of animations) {
+						ret = await anim(elem);
+					}
+				} catch(e) {
+					
+				}
+				
+				return ret;
+			};
+		}
+		
+		let promises = [
+			new Promise(resolve => resolve(1)),
+			new Promise(resolve => resolve(2)),
+			new Promise(resolve => resolve(3)),
+			new Promise(resolve => resolve(4))
+		];
+		
+		//promises.reduce((p1, p2) => {
+		//	return p1.then(() => p2).then(text => console.log(text));
+		//}, Promise.resolve());
+		
+		async function logInOrder(urls) {
+			for (const url of urls) {
+				const response = await fetch(url);
+				//console.log(await response.text());
+			}
+		}
+		
+		async function logInOrder2(urls) {
+			
+			//const results = urls.map(url => fetch(url));
+			//for (const result of results) {
+			//	const response = await result;
+			//	console.log(response.text());
+			//}
+			
+			const textPromises = urls.map(async url => {
+				const response = await fetch(url);
+				return response.text();
+			});
+			
+			for (let textPromise of textPromises) {
+				//console.log(await textPromise);
+			}
+		}
+		
+		let urls = ["aaa", "bbb", "ccc"];
+		
+		function fetch(url) {
+			return new Promise(resolve => {
+				switch (url) {
+					case "aaa" :
+						setTimeout(resolve, 200, {text() {return url}});
+						break;
+					case "bbb" :
+						setTimeout(resolve, 100, {text() {return url}});
+						break;
+					case "ccc" :
+						setTimeout(resolve, 300, {text() {return url}});
+						break;
+				}
+			});
+		}
+		
+		logInOrder2(urls);
+		
+		let set = new Set([3, 4]);
+		//console.log(set[Symbol.iterator]().next());
+		//console.log(set[Symbol.iterator]().next());
+		
+		for (let i of set) {
+			//console.log(i);
+		}
+		
+		async function process(array) {
+			for await (let i of array) {
+				//console.log(i);
+			}
+		}
+		//process([3, 4]);
+		
+		let obj = {
+			a : 1,
+			b : 2,
+			[Symbol.iterator]() {
+				let self = this;
+				let keys = Object.keys(self);
+				let count = 0;
+				return {
+					next() {
+						let key = keys[count++];
+						return {
+							value : self[key],
+							done : count > keys.length 
+						};
+					}
+				};
+			}
+		};
+		
+		//console.log(obj[Symbol.iterator]().next());
+		//console.log(obj[Symbol.iterator]().next());
+		
+		for (let val of obj) {
+			//alert(val);
+		}
+		
+		let obj2 = {
+			aa : 11,
+			bb : 22,
+			[Symbol.asyncIterator]() {
+				let self = this;
+				let keys = Object.keys(self);
+				let count = 0;
+				return {
+					next() {					
+						return new Promise((resolve, reject) => {
+							let done = count >= keys.length;
+							let value = !done ? self[keys[count++]] : undefined;
+							reject({value, done});
+						});
+					}
+				};
+			}
+		};
+		async function f() {
+			for await (let val of obj2) {
+				//console.log(val);
+			}
+		}
+		let p = f();
+		//p.catch(error => console.log("error: " + error));
+		
+		let set = new Set([3, 4]);
+		//alert(set[Symbol.iterator]().next);
+		
+		async function* asyncGen() {}
+		//alert(asyncGen()[Symbol.asyncIterator]().next === asyncGen().next);
+		
+		function* gen() {
+			let x = yield 1;
+			yield x;
+		}
+		//alert(gen()[Symbol.iterator]().next === gen().next);
+		let g = gen();
+		let val1 = g.next().value;
+		//alert(val1);
+		//alert(g.next(val1).value);
+		
+		function f() {
+			return {
+				[Symbol.a]() {
+					return this;
+				},
+				next() {
+					return {
+						value : "test",
+						done : false
+					};
+				}
+			};
+		}
+		
+		let o = f();
+		//alert(o[Symbol.a]() === o);
+		
+		async function* gen1() {
+			yield "a";
+			yield "b";
+			return 2;
+		}
+		let result;
+		async function* gen2() {
+			result = yield* gen1();
+		}
+		
+		let g2 = gen2();
+		g2.next();
+		g2.next();
+		//g2.next().then(value => console.log(value));
+		//console.log(g2.next());
+		//g2.next();
+		console.log(result);
+		
+		const person = new class {
+			constructor(name) {
+				this.name = name;
+			}
+			
+			sayName() {
+				return this.name;
+			}
+		}("zhangsan");
+		
+		//console.log(person.sayName());
+		
+		class Foo {
+			
+			f(baz) {
+				bar.call(this, baz);
+			}
+		}
+		
+		function bar(baz) {
+			this.xxx = baz;
+		}
+		
+		let foo = new Foo();
+		foo.f(4);
+		//console.log(foo.xxx);
+		
+		
+		const bar2 = Symbol("bar2");
+		class Foo2 {
+			f(baz) {
+				this[bar2](baz);
+			}
+			
+			[bar2](baz) {
+				this.xxx = baz;
+			}
+		}
+		
+		let foo2 = new Foo2();
+		foo2.f(34);
+		console.log(foo2.xxx);
+		
+		let obj = {a : 1};
+		let o = Object.create(obj);
+		let {a} = o;
+		//console.log(a);
+		
+		class Foo {
+			constructor(name, ...args) {
+				//console.log(args);
+				this.args = args;
+			}
+			
+			*[Symbol.iterator]() {
+				for (let arg of this.args) {
+					yield arg;
+				}
+			}
+		}
+		
+		for (let item of new Foo("foo", "hello", "world")) {
+			//console.log(item);
+		}
+		
+		class MyClass {
+			static myProp = "aaa";
+		}
+		
+		//console.log(new MyClass().myProp);
+		console.log(MyClass.myProp);
+		
+		class MyClass {
+			constructor() {
+				this.xxx = "a";
+				this.yyy = () => {
+					return "uuu";
+				}
+			}
+			
+			yyy() {
+				return "yyy";
+			}
+		}
+		
+		//console.log(new MyClass().yyy());
+		
+		//console.log(MyClass.prototype.yyy);
+		
+		class A {
+			constructor() {
+				this.x = 1;
+			}
+		}
+		
+		class B extends A {
+			constructor() {
+				super();
+				this.x = 2;
+				super.x = 3;
+				console.log(super.x);
+				console.log(this.x);
+			}
+		}
+		
+		new B();
+		
+		class C extends null {
+			
+		}
+		
+		//console.log(C.prototype.__proto__ === undefined);
+		
+		class A {
+			constructor() {
+				return Object.create(A.prototype);
+			}
+		}
+		
+		//console.log(new A());
+		
+		class Point {
+			constructor(x, y) {
+				this.x = x;
+				this.y = y;
+			}
+		}
+		
+		class ColorPoint extends Point {
+			constructor(x, y, color) {
+				super(x, y);
+				this.color = color;
+			}
+		}
+		
+		let p1 = new Point(2, 3);
+		let p2 = new ColorPoint(2, 3, "red");
+		//console.log(p2.__proto__.__proto__ === p1.__proto__);
+		
+		let o = Object.create(null);
+		//console.log(o.__proto__);
+		
+		function MyArray() {
+			
+		}
+		
+		MyArray.prototype = Object.create(Array.prototype);
+		let arr = new MyArray();
+		arr[0] = 1;
+		console.log(arr[0]);
+		
+		let arr = [1, 3];
+		//console.log(arr.slice());
+		
+		class VersionedArray extends Array {
+			constructor(...args) {
+				super(...args);
+				this.history = [[]];
+			}
+			
+			commit() {
+				this.history.push(this.slice());
+			}
+			
+			revert() {
+				this.splice(0, this.length, ...this.history[this.history.length - 1]);
+			}
+		}
+		
+		let verArr = new VersionedArray();
+		verArr.push(1);
+		verArr.push(2);
+		//console.log(verArr);
+		//console.log(verArr.history);
+		
+		verArr.commit();
+		//console.log(verArr.history);
+		verArr.push(3);
+		//console.log(verArr);
+		let verArr2 = new VersionedArray(3, 6);
+		
+		console.log(verArr2);
+		
+		let Mixin1 = superclass => class extends superclass {
+			foo() {
+				console.log("foo from Mixin1");
+				if (super.foo) super.foo();
+			}
+		};
+		
+		let Mixin2 = superclass => class extends superclass {
+			foo() {
+				console.log("foo from Mixin2");
+				if (super.foo) super.foo();
+			}
+		};
+		
+		class S {
+			foo () {
+				console.log("foo from S");
+			}
+		}
+		
+		class C extends Mixin1(Mixin2(S)) {
+			foo() {
+				console.log("foo from C");
+				if (super.foo) super.foo();
+			}
+		}
+		
+		new C().foo();
+		
+		function f() {
+			
+		}
+		
+		function g() {}
+		
+		g.prototype = Object.create(f.prototype);
+		//alert(new g() instanceof f);	//true
+		
+		class A {}
+		
+		class B extends A {}
+		
+		//alert(new B() instanceof A);	// true
+		
+		function F(param) {
+			this.param = param;
+		}
+		
+		function G(param) {
+			F.call(this, param);
+		}
+		const gg = new G("xxx");
+		//alert(gg.param);
+		alert(gg instanceof F);
+		
+		let obj = new Proxy({}, {
+			get : function(target, key, receiver) {
+				console.log(`gettting ${key}`);
+				return Reflect.get(target, key, receiver);
+			},
+			set : function(target, key, value, receiver) {
+				console.log(`setting ${key}`);
+				return Reflect.set(target, key, value, receiver);
+			}
+		});
+		
+		//obj.count = 1;
+		//console.log(++obj.count);
+		
+		const fproxy = new Proxy(function(x, y) {
+			return x + y;
+		}, {
+			get : function(target, name) {
+				if ("prototype" === name) return Object.prototype;
+				return `Hello, ${name}`;
+			},
+			apply : function(target, thisBinding, args) {
+				return args[0];
+			},
+			construct : function(target, args) {
+				return {value : args[1]};
+			}
+		});
+		
+		//console.log(fproxy(6, 2));
+		//console.log(new fproxy(9, 87));
+		//console.log(fproxy.foo);
+		
+		function createArray(...elements) {
+			let target = [];
+			target.push(...elements);
+			//console.log(elements);
+			return new Proxy(target, {
+				get : function(target, index, receiver) {
+					if (index < 0) index = String(target.length + Number(index));
+					return Reflect.get(target, index, receiver);
+				}
+			});
+		}
+		
+		let arr = createArray(5, "t", 7);
+		//console.log(arr[-2]);
+		
+		const funcObj = {
+			double(n) {
+				return n * 2;
+			},
+			pow(n) {
+				return n * n;
+			},
+			reverse(n) {
+				return n.toString().split("").reverse().join("") | 0;
+			}
+		};
+		const pipe = value => {
+			let funcStack = [];
+			let proxy = new Proxy({}, {
+				get(target, name) {
+					if ("get" === name) return funcStack.reduce((val, fn) => {
+						return fn(val);
+					}, value);
+					funcStack.push(funcObj[name]);
+					return proxy;
+				}
+			});
+			return proxy;
+		};
+		
+		console.log(pipe(2).pow.double.reverse.get);
+		
+		const dom = new Proxy({}, {
+			get(target, property) {
+				return function(attrs = {}, ...children) {
+					let elem = document.createElement(property);
+					for (let [key, value] of Object.entries(attrs)) {
+						elem.setAttribute(key, value);
+					}
+					for (let child of children) {
+						if (typeof child === "string")
+							child = document.createTextNode(child);
+						elem.appendChild(child);
+					}
+					return elem;
+				};
+			}
+		});
+		let elem = dom.div({}, "Hello, my name is ", dom.a({href : "example.com"}, "Mark"), ". I like ", dom.ul({}, dom.li({}, "Web"), dom.li({}, "Table Tennis"), dom.li({}, "Football")));
+		document.body.appendChild(elem);
+		
+		const target = Object.defineProperties({}, {
+			foo : {
+				value : 123,
+				writable : true,
+				configurable : false
+			}
+		});
+		
+		const proxy = new Proxy(target, {
+			get(target, prop) {
+				return 465;
+			}
+		});
+		
+		console.log(proxy.foo);
+		
+		const validator = {
+			set(target, prop, value) {
+				if (prop === "age") {
+					if (!Number.isInteger(value))
+						throw new TypeError("The age is not an integer");
+					if (value > 200)
+						throw new RangeError("The age seems invalid");
+				}
+				target[prop] = value;
+				return true;
+			}
+		};
+		const person = new Proxy({}, validator);
+		person.age = 10;
+		console.log(person.age);
+		person.age = 2001;
+		
+		const proxy = new Proxy({}, {
+			get(target, prop) {
+				this.invariant(prop, "get");
+				return target[prop];
+			},
+			set(target, prop, value) {
+				this.invariant(prop, "set");
+				target[prop] = value;
+				return true;
+			},
+			invariant(prop, action) {
+				if (prop.startsWith("_")) {
+					throw new Error(`the private property cannot be accessed by ${action} method`);
+				}
+			}
+		});
+		
+		proxy._xxx;
+		
+		const proxy = new Proxy(() => {
+			return "I'm the target";
+		}, {
+			apply(target, thisBinding, ...args) {
+				return "I'm the proxy";
+			}
+		});
+		
+		//console.log(proxy());
+		
+		const twice = new Proxy((x, y) => {
+			return x + y;
+		}, {
+			apply(target, thisBinding, ...args) {
+				return Reflect.apply(...arguments) * 2;
+			}
+		});
+		
+		//console.log(twice(4, 5));
+		console.log(Reflect.apply(twice, null, [5, 6]));
+		
+		const proxy = new Proxy({_prop : "abc", xxx : 123}, {
+			has(target, key) {
+				if (key.startsWith("_"))
+					return false;
+				return key in target;
+			}
+		});
+		
+		console.log("_prop" in proxy);
+		console.log("xxx" in proxy);
+		console.log(proxy.hasOwnProperty("_prop"));
+		
+		const proxy = new Proxy(class {}, {
+			construct(target, args) {
+				//console.log(typeof args);
+				//console.log(Object.prototype.toString.call(args).slice(8, -1));
+				//console.log(args);
+				//console.log(Array.isArray(args));
+				//console.log(args.__proto__ === Array.prototype);
+				console.log("called: " + args.join(", "));
+				return {value : args[0] * 10};
+			}
+		});
+		console.log(new proxy(3, 9).value);
+		
+		let target = {
+			"_foo" : "foo",
+			"_prop" : "bar",
+			"baz" : "baz"
+		};
+		
+		const handler = {
+			ownKeys(target) {
+				return Reflect.ownKeys(target).filter(key => !key.startsWith("_"));
+			}
+		};
+		
+		const proxy = new Proxy(target, handler);
+		for (let key of Object.keys(proxy)) {
+			console.log(key);
+		}
+		
+		let target = {
+			a : 1,
+			b : 2,
+			c : 3,
+			[Symbol.for("secret")] : "4"
+		};
+		
+		Object.defineProperty(target, "key", {
+			value : "static",
+			configurable : true,
+			writable : true,
+			enumerable : false
+		});
+		
+		let handler = {
+			ownKeys(target) {
+				return ["a", "d", Symbol.for("secret"), "key"];
+			}
+		};
+		
+		let proxy = new Proxy(target, handler);
+		console.log(Object.keys(proxy));
+		
+		const _name = new WeakMap();
+		
+		class Person {
+			constructor(name) {
+				_name.set(this, name);
+			}
+			
+			get name() {
+				return _name.get(this);
+			}
+		}
+		
+		const target = new Person("zhangsan");
+		
+		console.log(target.name);
+		const proxy = new Proxy(target, {});
+		console.log(proxy.name);
+		
+		const date = new Date();
+		const handler = {
+			get(target, key) {
+				if (key === "getDate") {
+					console.log(target === date);
+					console.log(target.getDate());
+					console.log(this === handler);
+					return target.getDate.bind(target);
+				}
+				return Reflect.get(...arguments);
+			}
+		};
+		
+		const proxy = new Proxy(date, handler);
+		console.log(proxy.getDate === date.getDate.bind(date));
+		
+		function createWebservice(baseUrl) {
+			return new Proxy({}, {
+				get(target, prop, receiver) {
+					return () => httpGet(`${baseUrl}/${prop}`);
+				}
+			});
+		}
+		
+		let myObject = {
+			foo : 1,
+			bar : 2,
+			get baz() {
+				return this.foo + this.bar;
+			}
+		};
+		
+		let myReceiverObject = {
+			foo : 4,
+			bar : 5
+		};
+		
+		console.log(Reflect.get(myObject, "baz", myReceiverObject));
+		
+		class Greeting {
+			constructor(name) {
+				this.name = name;
+			}
+		}
+		
+		const instance = Reflect.construct(Greeting, ["zhangsan"]);
+		console.log(instance.name);
+		
+		console.log(Reflect.apply(Object.prototype.toString, {}, []));
+		
+		const queuedObservers = new Set();
+		
+		const observable = obj => new Proxy(obj, {set});
+		const observer = fn => queuedObservers.add(fn);
+		
+		function set(target, key, value, receiver) {
+			const result = Reflect.set(...arguments);
+			queuedObservers.forEach(observer => observer());
+			return result;
+		}
+		
+		const person = observable({
+			"name" : "lisi",
+			"age" : 25
+		});
+		
+		function print() {
+			console.log(`${person.name}: ${person.age}`);
+		}
+		
+		observer(print);
+		
+		person.name = "wangwu";
+		
+		function* gen1(){
+			console.log('s1', a * (yield 2))
+		}
+		
+		function* gen2(){
+			console.log('s2', (yield 2) * a)
+		}
+		
+		var g11 = gen1(), g22 = gen2(), a = 9;
+		
+		g11.next();
+		g22.next();
+		a = 12;
+		
+		g11.next(2); // 18
+		g22.next(2); // 24
+		
+		async function* gen01() {
+			yield 'a';
+			yield 'b';
+			return 2;
+		}
+
+		async function* gen02() {
+			const result = yield* gen01();
+			//console.log(result);
+		}
+		
+		let g02 = gen02();
+		g02.next();
+		g02.next();
+		g02.next();
+		
+		async function* gen1() {
+			yield "a";
+			yield "b";
+			return 2;
+		}
+		let result = 1;
+		async function* gen2() {
+			result = yield* gen1();
+			console.log(result);
+		}
+		
+		let g2 = gen2();
+		g2.next();
+		g2.next();
+		//g2.next().then(value => console.log(value));
+		//console.log(g2.next());
+		g2.next();
+		console.log(result);
+		*/
+		
+		
+	}, false);
+		
+</script> 
+</head>
+<body>
+	<div></div>
+</body>
+</html>
+ 

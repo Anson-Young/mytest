@@ -1,0 +1,3868 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf8"/>
+<link rel="stylesheet" type="text/css" href="demo01_01.css" id="ss_first"/>
+<link rel="stylesheet" type="text/css" href="demo01_02.css" title="demo01_02"/>
+<!--<script src="js/jquery.js"></script>-->
+</head>
+<script>
+	//alert($ === jQuery);
+	/*
+	var str = "one\aaa";
+	alert(str);
+	
+	alert(0 == false);
+	
+	alert(({x : 1, y : 2}).toString());
+	alert(({x : 1, y : 2}).valueOf());
+	
+	scope = "global";
+	
+	alert(scope);
+	
+	function test(o) {
+		var i = 0;
+		if (typeof o == "object") {
+			var j = 0;
+			for(var k = 0; k < 10; k++) {
+				console.log(k);
+			}
+			
+			console.log(k);
+		}
+		
+		console.log(j);
+	}
+	
+	test({});
+	
+	var a = [1, 0, [5, 6]];
+	alert(a[2]["0"]);
+	
+	alert("a" / 0);
+	
+	alert("1" && 0);
+	
+	var a = [1, 2, 3];
+	
+	var index = 0;
+	
+	a[index++] *= 2;
+	a[index++] = a[index++] * 2;
+	alert(a);
+	
+	var s = "a";
+	
+	function g() {
+		var s = "b";
+		alert(s);
+	}
+	g();
+	alert(s);
+	
+	for(var i = 0, j = 8; i < j; i++, j--) {
+		console.log(i + j);
+	}
+	
+	var i, j, k;
+	i = 2, j = 5, k = 9;
+	i++, j--;
+	alert(i = 2,j = 1);
+	
+	var s = "a";
+	alert(s == 0);
+	
+	
+	function fn1() {
+		this.age = 1;
+		alert(this);
+	}
+	
+	fn1();
+	alert(age);
+	
+	var ss = "The Window";
+	var object = {
+		ss : "My Object",
+		getNameFunc : function(){
+			return this.funAA;
+		},
+		funAA : function() {
+			return this.ss;
+		}
+	};
+	
+	alert(object.getNameFunc()());
+	alert(object.funAA());
+	
+	function inherit(p) {
+		if (p == null) throw TypeError();
+		//if (Object.create)
+		//	return Object.create(p);
+		var t = typeof p;
+		//alert(t);
+		if (t !== "object" && t !== "function") throw TypeError();
+		function f() {};
+		f.prototype = p;
+		return new f();
+	}
+	function fn1() {
+		//this.name = "cheng";
+	}
+	
+	alert(inherit(fn1).a);
+	//alert(inherit(new Function()));
+	
+	function extend(o, p) {
+		for(prop in p) {
+			o[prop] = p[prop];
+		}
+		return o;
+	}
+	
+	function union(o, p) {
+		return extend(extend({}, o), p);
+	}
+	
+	var o = {
+		name : "a",
+		age : 15
+	};
+	
+	var p = {
+		name : "b",
+		address : "addasd"
+	};
+	
+	alert(extend(o, p).name);
+	alert(union(o, p).name);
+	
+	var obj = {
+		a : 1,
+		b : "b"
+	};
+	
+	function Box() {
+		
+	}
+	
+	var box = new Box();
+	
+	//alert(obj.toString());
+	//alert(box.toString());
+	//alert("abc".toString());
+	
+	function classof(o) {
+		return Object.prototype.toString.call(o).slice(8, -1);
+		//alert(typeof o);
+		//return o.toString().slice(8, -1);
+	}
+	//alert(classof([]));
+	var arr = [];
+	//alert(arr.toString());
+	alert(classof(new Box()));
+	
+	var obj = {
+		a : 1,
+		b : "b"
+	};
+	alert(JSON.parse(JSON.stringify(obj)));
+	
+	var bbb = {  
+		i: 10,  
+		toString: function() {  
+			console.log('toString');  
+			return this.i;  
+		},  
+		valueOf: function() {  
+			console.log('valueOf');  
+			return this.i;  
+		}  
+	}  
+	//alert(bbb);// 10 toString  
+	//alert(+bbb); // 10 valueOf  
+	alert('' + bbb); // 10 valueOf  
+	//alert(String(bbb)); // 10 toString  
+	//alert(Number(bbb)); // 10 valueOf  
+	//alert(bbb == '10'); // true valueOf  
+	//alert(bbb === '10'); // false
+	
+	var a = new Array(10);
+	for (var p in a) {
+		alert(p);
+	}
+	
+	var arr = [1];
+	for (var p in arr) {
+		alert(p);
+	}
+	
+	var a = [,,,];
+	//alert(a.length);
+	//console.log(a);
+	alert(0 in a);
+	
+	var a = [1, 2, 3, 4, 5, 6, 7, 8];
+	a.splice(1, 2);
+	alert(a);
+	
+	function f(a) {
+		alert(a);
+	}
+	
+	function g(func) {
+		func("asdf");
+	}
+	
+	g(f);
+	
+	function foreach(arr, f, t) {
+		try {
+			alert(t);
+			arr.forEach(f, t);
+		} catch(e) {
+			if (e === foreach.break) return;
+			throw e;
+		}
+	}
+	
+	foreach.break = new Error("StopIteration");
+	
+	var arr = [7, 55, 46];
+	
+	foreach(arr, function(e, i, arr) {
+		if (i == 2) {
+			alert(this);
+			throw foreach.break;
+		}
+	}, arr);
+	
+	var arr = [,,,];
+	alert(arr.length);
+	var b = arr.filter(function() {
+		return true;
+	});
+	alert(b.length);
+	
+	var isArray = Function.isArray || function(o) {
+		//return typeof o === "object" && Object.prototype.toString.call(o) === "[object Array]";
+		return typeof o === "object" && o.constructor === Array;
+	};
+	
+	var arr = undefined;
+	alert(isArray(arr));
+	
+	function Box() {
+		
+	}
+	
+	var box = new Box();
+	//alert(box.__proto__ === Box.prototype);
+	//console.log(Box.prototype);
+	//alert(Box.__proto__ === Function.prototype);
+	//alert(box.constructor === Box.prototype.constructor);
+	alert(Object.prototype);
+	
+	function inherit(p) {
+		if (p == null) throw TypeError();
+		if (Object.create)
+			return Object.create(p);
+		var t = typeof p;
+		if (t !== "object" && t !== "function") throw TypeError();
+		function f() {};
+		f.prototype = p;
+		return new f();
+	}
+	
+	function Box() {}
+	
+	var box = inherit(Box);
+	
+	//alert(box.__proto__ === Box);
+	//alert(Box.constructor);
+	//alert(box.__proto__.constructor);
+	alert(box.constructor === Box.constructor);
+	//alert(f);
+	
+	function G() {
+		function g() {
+		
+		}
+		return new g();
+	}
+	
+	//alert(g);
+	//alert(G().__proto__.constructor);
+	//alert(G().constructor);
+	
+	alert(f(4));
+	var f = function fact(x) {
+		if (x <= 1) return 1;
+		return x * fact(x - 1);
+	}
+	
+	alert(isFinite("asdf"));
+	
+	var extend = (function(){
+		for(var p in {toString : null}) {
+			return function extend(o) {
+				for(var i = 1; i < arguments.length; i++) {
+					var source = arguments[i];
+					for (var prop in source) o[prop] = source[prop];
+				}
+			};
+		}
+		
+		return function extend(o) {
+			for(var i = 1; i < arguments.length; i++) {
+				var source = arguments[i];
+				for(var prop in source) o[prop] = source[prop];
+				
+				for(var j in protoprops) {
+					var prop = protoprops[j];
+					if (source.hasOwnProperty(prop)) o[prop] = source[prop];
+				}
+			}
+		};
+		
+		var protoprops = ["toString", "valueOf", "constructor", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString"];
+	}());
+	
+	var o = {a : 1, b : 2};
+	
+	extend(o, {
+		xxx : "xxx===",
+		toString : function(){
+			return this.xxx;
+		}
+	});
+	
+	alert(o.toString());
+	
+	var uniqueInteger = (function() {
+		var counter = 0;
+		return function() {
+			return counter++;
+		};
+	}());
+	
+	alert(uniqueInteger());
+	alert(uniqueInteger());
+	alert(uniqueInteger());
+	
+	function consfuncs() {
+		var funcs = [];
+		for(var i = 0; i < 10; i++) {
+			funcs[i] = (function(a) {return function() {return a};}(i));
+		}
+		return funcs;
+	}
+	
+	var funcs = consfuncs();
+	alert(funcs[5]());
+	
+	//alert(Math.max(9, 8, 10));
+	
+	function trace(o, m) {
+		var original = o[m];
+		o[m] = function() {
+			console.log(new Date() + "Enter: " + m);
+			var result = original.apply(this, arguments);
+			console.log(new Date() + "Exit: " + m);
+			return result;
+		};
+	}
+	
+	var obj = {
+		f : function(a, b, c) {
+			return a + b + c;
+		},
+		
+		g: function(d, e) {
+			return d + e;
+		}
+	};
+	
+	trace(obj, "g");
+	console.log(obj.g(6, 3, 9, 998));
+	
+		
+	Function.prototype.bind = function(o) {
+		var self = this;
+		return function () {
+			return self.apply(o, arguments);
+		};
+	};	
+	
+	function f(y) {
+		return this.x + y;
+	}
+	
+	var o = {
+		x : 1
+	};
+	
+	var g = f.bind(o);
+	
+	alert(g(5));
+	
+	/*
+	function func(x, y) {
+		alert(func.arguments[0]);
+	}
+	
+	func(1, 4);
+	*/
+	
+	//alert(typeof g(5));
+
+	//alert(Function.prototype.bind);
+	
+	/*
+	var z = new Object();
+	
+	o.z = [1, 3, 9, 44];
+	
+	o.h = {};
+	
+	//alert(o[z]);
+	//alert(o.hasOwnProperty(z));
+	//alert(o.h);
+	alert(o.z);
+		
+	Function.prototype.bind = function(o) {
+		var self = this;
+		var outerArgs = arguments;
+		return function() {
+			var argArr = [], i;
+			for(i = 1; i < outerArgs.length; i++) {
+				argArr.push(outerArgs[i]);
+			}
+			for(i = 0; i < arguments.length; i++) {
+				argArr.push(arguments[i]);
+			}
+			return self.apply(o, argArr);
+		};
+	};
+	
+	function sum(x, y) {
+		//alert(typeof arguments);
+		return x + y;
+	}
+	
+	//sum();
+	
+	var succ = sum.bind(null, 1);
+	//alert(succ(2));	// 3
+	
+	function f(y, z) {
+		return this.x * y * z;
+	}
+	
+	var multiply = f.bind({x : 3}, 4);
+	
+	alert(multiply(8, 9));
+	
+	var f = function func() {
+		f.a = "dbc";
+	};
+	
+	f();
+	alert(f.toString());
+	
+	function Box() {
+		this.x = 1;
+		this.y = 2;
+		console.log(this);
+		//console.log(this instanceof Box);
+	}
+	
+	var a = {};
+	
+	//Box.call(a);
+	
+	var box = new Box();
+	//console.log(box);
+	//alert(box instanceof Box);
+	
+	//alert(a.x);
+	//alert(a.__proto__ === Box.prototype);
+	//alert(Box.prototype === Function.prototype);
+	//console.log(Box.prototype);
+	//console.log(a.__proto__ === Object.prototype);
+	
+	Function.prototype.bind = function(context){
+		var args = Array.prototype.slice.call(arguments,1),//要点3
+			self = this,
+			//F = function(){},//要点1
+			bound = function(){
+				var innerArgs = Array.prototype.slice.call(arguments);
+				var finalArgs = args.concat(innerArgs);
+				return self.apply((this instanceof bound ? this : context),finalArgs);//要点2
+			};
+        //F.prototype = self.prototype;
+        //bound.prototype = new F();
+		bound.prototype = self.prototype;
+        return bound;
+	}
+	
+	function f(y) {
+		return this.x + y;
+	}
+	
+	var o = {
+		x : 1
+	};
+	
+	var g = f.bind(o);
+	//alert(g(78));
+	
+	function Box(i) {
+		this.x = 2;
+		this.y = i;
+		this.f = function() {
+			return this.x + this.y;
+		};
+	}
+	
+	var b = Box.bind(o, 9);
+	var c = new b();
+	alert(c.x);
+	alert(c.f());
+	alert(b.prototype);
+	
+	var a = [5, 3, 4, 9];
+	a.sort(function(x, y) {
+		return x - y;
+	});
+	//alert(a);
+	
+	var objArr = [{
+		x : 5
+	}, {
+		x : 4
+	}, {
+		x: 6
+	}];
+	
+	function sortByProperty(prop) {
+		return function (obj1, obj2) {
+			return obj1[prop] - obj2[prop];
+		};
+	}
+	
+	objArr.sort(sortByProperty("x"));
+	console.log(objArr);
+	
+	Function.prototype.bindOther = function(context){
+		var args = Array.prototype.slice.call(arguments,1),
+			self = this,
+			//F = function(){},
+			bound = function(){
+				var innerArgs = Array.prototype.slice.call(arguments);
+				var finalArgs = args.concat(innerArgs);
+				//console.log(this !== window);
+				if (this !== window) {
+					bound.prototype = self.prototype;
+					self.apply(this, finalArgs);
+					return;
+				}
+				return self.apply(context, finalArgs);
+			};
+		bound.prototype = undefined;
+		Object.defineProperty(bound, "length", {
+			value: self.length - args.length,
+			writable : true
+		});
+        //F.prototype = self.prototype;
+        //bound.prototype = new F();
+		//bound.prototype = this.prototype;
+        return bound;
+	}
+	
+	function Box(i, j, k) {
+		this.x = 2;
+		this.y = i;
+		this.f = function() {
+			return this.x + this.y;
+		};
+	}
+	
+	var o = {
+		x : 1
+	};
+	
+	var bOther = Box.bindOther(o, 11);
+	var c = new bOther();
+	//alert(c.x);
+	//alert(c.f());
+	
+	function func(y, z, i, j) {
+		return this.x + y + z + i + j;
+	}
+	
+	var g = func.bindOther(o, 12);
+	alert(g.prototype);
+	alert(g.length);
+	alert(g(123, 45, 99));
+	
+	var b = Box.bind(o, 15);
+	//alert(b.length);
+	//alert(b.prototype);
+	var obj = new b();
+	//alert(obj.f());
+	
+	function f() {
+		
+	}
+	
+	alert(Object.prototype.toString.call(f));
+	
+	var data = [1, 1, 3, 5, 5];
+	
+	var sum = function(x, y) {
+		return x + y;
+	};
+	
+	var square = function(x) {
+		return x * x;
+	};
+	
+	var mean = data.reduce(sum) / data.length;
+	//alert(mean);
+	
+	var deviation = data.map(function(x) {
+		return x - mean;
+	}).map(square).reduce(sum) / (data.length - 1);
+	//alert(deviation);
+	//alert(Math.sqrt(deviation));
+	
+	var map = Array.prototype.map ? function(a, f) {
+		return a.map(f);
+	} : function(a, f) {
+		var results = [];
+		for (var i = 0, len = a.length; i < len; i++) {
+			results[i] = f.call(undefined, a[i], i, a);
+		}
+		
+		return results;
+	};
+	
+	var data = [7, 9, 45];
+	
+	function f(x) {
+		return x * x;
+	}
+	
+	//alert(map(data, f));
+	
+	function g(x, y) {
+		//alert(y);
+		//alert(arguments.length);
+		return x + y;
+	}
+	
+	var reduce = Array.prototype.reduce ? function(a, f, initial) {
+		if (arguments.length > 2)
+			return a.reduce(f, initial);
+		return a.reduce(f);
+	} : function(a, f, initial) {
+		var i = 0, len = a.length, accumulator;
+		if (arguments.length > 2) {
+			accumulator = initial;
+		} else {
+			if (len == 0) throw new TypeError();
+			while (i < len) {
+				if (i in a) {
+					accumulator = a[i++];
+					break;
+				}
+			}
+			if (i == len) throw new TypeError();
+		}
+		while (i < len) {
+			if (i in a) {
+				accumulator = f.call(undefined, accumulator, a[i], i, a);
+			}
+			i++;
+		}
+		return accumulator;
+	};
+	
+	alert(reduce(data, g));
+	//g(1, undefined);
+	
+	function not(f) {
+		return function () {
+			return !f.apply(this, arguments);
+		};
+	}
+	
+	var even = function(x) {
+		return x % 2 === 0;
+	};
+	
+	var odd = not(even);
+	alert([1, 5, 99, 36].every(odd));
+	
+	function compose(f, g) {
+		return function() {
+			return f.call(undefined, g.apply(undefined, arguments));
+		};
+	}
+	
+	var square = function(x) {
+		//alert(this);
+		return x * x;
+	};
+	
+	var sum = function(x, y) {
+		return x + y;
+	};
+	
+	var squareofsum = compose(square, sum);
+	alert(squareofsum(2, 5));
+	
+	function array(o, n) {
+		return Array.prototype.slice.call(o, n || 0);
+	}
+	
+	function partialLeft(f) {
+		var args = arguments;
+		return function() {
+			var a = array(args, 1);
+			return f.apply(this, a.concat(array(arguments)));
+		};
+	}
+	
+	function partialRight(f) {
+		var args = arguments;
+		return function() {
+			var a = array(args, 1);
+			return f.apply(this, array(arguments).concat(a));
+		};
+	}
+	
+	function partial(f) {
+		var args = arguments;
+		return function() {
+			var a = array(args, 1);
+			var j = 0;
+			for (var i = 0, len = a.length; i < len; i++) {
+				if (a[i]  == undefined) {
+					a[i] = arguments[j++];
+				}
+			}
+			return f.apply(this, a.concat(array(arguments, j)));
+		};
+	}
+	
+	var sum = function(x, y) {
+		//alert(arguments[1]);
+		return x + y;
+	};
+	
+	var product = function(x, y) {
+		return x * y;
+	};
+	
+	function compose(f, g) {
+		return function() {
+			return f.call(this, g.apply(this, arguments));
+		};
+	}
+	
+	var not = partialLeft(compose, function(x) {
+		return !x;
+	});
+	
+	var even = function(x) {
+		return x % 2 === 0;
+	};
+	
+	var odd = not(even);
+	var isNumber = not(isNaN);
+	//alert(odd(6));
+	
+	function f(x, y, z) {
+		return x * (y - z);
+	}
+	
+	var data = [1, 1, 3, 5, 5];
+	
+	var square = partial(Math.pow, undefined, 2);
+	var reciprocal = partial(Math.pow, undefined, -1);
+	var sqrt = partial(Math.pow, undefined, .5);
+	var neg = partial(product, -1);
+	
+	var map = Array.prototype.map ? function(a, f) {
+		return a.map(f);
+	} : function(a, f) {
+		var results = [];
+		for (var i = 0, len = a.length; i < len; i++) {
+			results[i] = f.call(undefined, a[i], i, a);
+		}
+		return results;
+	};
+	
+	var reduce = Array.prototype.reduce ? function(a, f, initial) {
+		if (arguments.length > 2) return a.reduce(f, initial);
+		return a.reduce(f);
+	} : function(a, f, initial) {
+		var i = 0, len = a.length, accumulator;
+		if (arguments.length > 2) accumulator = initial;
+		else {
+			if (len == 0) throw new TypeError();
+			while (i < len) {
+				if (i in a) {
+					accumulator = a[i++];
+					break;
+				}
+			}
+			
+			if (i == len) throw new TypeError();
+		}
+		
+		while (i < len) {
+			if (i in a) {
+				accumulator = f.call(undefined, accumulator, a[i], i, a);
+			}
+			i++;
+		}
+		
+		return accumulator;
+	};
+	
+	var mean = product(reduce(data, sum), reciprocal(data.length));
+	//alert(mean);
+	
+	var deviation = product(reduce(map(data, compose(square, partial(sum, neg(mean)))), sum), reciprocal(sum(data.length, -1)));
+	
+	alert(sqrt(deviation));
+	
+	//alert(partialLeft(sum, 5)(6));
+	//alert(partialRight(Math.pow, 1 / 3)(8));
+	//alert(partial(f, undefined, 4, 5)(9));
+	
+	var a = [1, 3];
+	//alert(a.join(","));
+	var b = ["1", "3"];
+	//alert(b.join(","));
+	
+	var memoize = function(f) {
+		var cache = {};
+		
+		return function() {
+			var key = arguments.length + Array.prototype.join.call(arguments, ",");
+			if (key in cache) return cache[key];
+			return cache[key] = f.apply(this, arguments);
+		};
+	};
+	
+	function gcb(a, b) {
+		var t;
+		if (a < b) {
+			t = a;
+			a = b;
+			b = t;
+		}
+		
+		while (b != 0) {
+			t = b;
+			b = a % b;
+			a = t;
+		}
+		
+		return a;
+	}
+	
+	var gcbmemo = memoize(gcb);
+	//alert(gcbmemo(46, 22));
+	
+	var fracmemo = memoize(function fractional(n) {
+		if (n == 1) return 1;
+		return n * fractional(n - 1);
+	});
+	
+	//alert(fracmemo(5));
+	
+	var fractional = memoize(function(n) {
+		return n <= 1 ? 1 : n * fractional(n - 1);
+	});
+	alert(fractional(6));
+	
+	function inherit(o) {
+		if (Object.create) 
+			return Object.create(o);
+		var t = typeof o;
+		if (t !== "object" && t !== "function")
+			throw new TypeError();
+		function F() {}
+		F.prototype = o;
+		return new F();
+	}
+	
+	var o = {
+		a : 1,
+		b : 2,
+		c : function() {
+			return this.a + this.b;
+		}
+	};
+	
+	var o1 = inherit(o);
+	//alert(o1.c());
+	
+	function range(from, to) {
+		var r = inherit(range.methods);
+		r.from = from;
+		r.to = to;
+		return r;
+	}
+	
+	range.methods = {
+		includes : function(x) {
+			return this.from <= x && x <= this.to;
+		},
+		
+		foreach : function(f) {
+			for (var x = Math.ceil(this.from); x <= this.to; x++) {
+				f(x);
+			}
+		},
+		
+		toString : function() {
+			return "(" + this.from + "..." + this.to + ")";
+		}
+	};
+	var o = range(2, 4);
+	//alert(o.includes(3));
+	//o.foreach(console.log);
+	//alert(o.toString());
+	
+	var o = {};
+	function F() {}
+	function G() {}
+	function H() {}
+	F.prototype = G.prototype = o;
+	var g = new G();
+	
+	alert(g instanceof F);
+	
+	function F() {
+		F.a = 3;
+	}
+	
+	var o = new F();
+	//alert(o.a);
+	
+	var o = {};
+	//alert(typeof o.constructor);
+	//alert(Object.toString());
+	function F(a, b) {
+		
+	}
+	
+	var f = F.bind(1);
+	//alert(f.getName);
+	var obj = new f();
+	//alert(typeof obj.constructor);
+	//alert(obj.prototype);
+	
+	//alert("function abc()".match(/^function\s*(.*)\(/)[1]);
+	var func = new Function();
+	//alert(func.getName);
+	
+	function classof(o) {
+		if (o === null) return "Null";
+		if (o === undefined) return "Undefined";
+		return Object.prototype.toString.call(o).slice(8, -1);
+	}
+	
+	//alert(classof(3));
+	//alert(classof(function() {}));
+	
+	Function.prototype.getName = function() {
+		if ("name" in this) return this.name;
+		return this.name = this.toString().match(/^function\s*([^(]*)\(/)[1];
+	};
+	
+	function type(o) {
+		// null
+		if (o === null) return "Null";
+		
+		// t:type of o(primitive value)
+		// c:class of o(most native objects)
+		// n:name of constructor which create o
+		var t, c, n;
+		// return the type of primitive value or function
+		if ((t = typeof o) !== "object") return t;
+		
+		// return the class name of most native objects, such as Array
+		if ((c = classof(o)) !== "Object") return c;
+		
+		// return the name of constructor which create o
+		if (o.constructor && typeof o.contructor === "function" && (n = o.contructor.getName())) return n;
+		
+		return "Object";
+	}
+	
+	
+	var Complex = function() {};
+	
+	var c = new Complex();
+	//alert(type(c));
+	//alert(typeof null);
+	//alert(typeof undefined);
+	
+	function quacks(o) {
+		for (var i = 1, len = arguments.length; i < len; i++) {
+			var arg = arguments[i];
+			switch (typeof arg) {
+				case "string" :
+					if (typeof o[arg] !== "function") return false;
+				continue;
+				case "function" :
+					arg = arg.prototype;
+				case "object" :
+					for (var m in arg) {
+						if (typeof arg[m] !== "function") continue;
+						if (typeof o[m] !== "function") return false;
+					}
+			}
+		}
+		
+		return true;
+	}
+
+	function F() {
+		
+	}
+	
+	F.prototype = {
+		a : 1,
+		b : 2,
+		ss : function() {}
+	};
+	
+	var o = {
+		s : function() {}
+	};
+	
+	alert(quacks(o, "s"));
+	*/
+
+	/*
+	Function.prototype.unCurrying = function () {
+		var f = this;
+		return function () {
+			var a = arguments;
+			return f.apply(a[0], [].slice.call(a, 1));
+		};
+	};
+	
+	Function.prototype.unCurrying = function () {
+		return this.call.bind(this);
+	};
+	
+	var push = Array.prototype.push.unCurrying(),
+	obj = {};
+	push(obj, 'first', 'two');
+	//alert(obj);
+	//console.log(obj);
+	//console.log("length:"+obj.length);
+	
+	var p = Array.prototype.push.call;
+	alert(typeof p);
+	var a = [];
+	Array.prototype.push.call(a, 1);
+	alert(a);
+	p(a, 2);
+	
+	"use strict";
+	
+	function F() {
+		this.a = 1;
+	}
+	
+	var o = {
+		f : function() {
+			F.call(undefined, 3);
+		}
+	};
+	
+	//o.f();
+	F.call(o);
+	console.log(o);
+	
+	function Set() {
+		this.values = {};
+		this.n = 0;
+		this.add.apply(this, arguments);
+	}
+	
+	Set.prototype.add = function() {
+		for (var i = 0; i < arguments.length; i++) {
+			var val = arguments[i];
+			var key = Set._v2s(val);
+			if (this.values.hasOwnProperty(key)) continue;
+			this.values[key] = val;
+			this.n++;
+		}
+		
+		return this;
+	};
+	
+	Set.prototype.remove = function() {
+		for (var i = 0; i < arguments.length; i++) {
+			var key = Set._v2s(arguments[i]);
+			if (this.values.hasOwnProperty(key)) {
+				delete this.values[key];
+				this.n--;
+			}
+		}
+		return this;
+	};
+	
+	Set.prototype.contains = function(val) {
+		return this.values.hasOwnProperty(Set._v2s(val));
+	};
+	
+	Set.prototype.forEach = function(f, context) {
+		for (var key in this.values) {
+			if (this.values.hasOwnProperty(key)) {
+				f.call(context, this.values[key]);
+			}
+		}
+	};
+	
+	Set.prototype.size = function() {
+		return this.n;
+	};
+	
+	Set._v2s = function(val) {
+		switch(val) {
+			case undefined : return "u";
+			case null : return "n";
+			case true : return "t";
+			case false : return "f";
+			default : 
+				switch(typeof val) {
+					case "number" : return "#" + val;
+					case "string" : return "''" + val;
+					default : return "@" + objectId(val);
+				}
+		}
+		
+		function objectId(o) {
+			var prop = "|**object**|";
+			if (o.hasOwnProperty(prop)) return o[prop];
+			return o[prop] = Set._v2s.next++;
+		}
+	};
+	
+	Set._v2s.next = 100;
+	
+	var set = new Set("a", 1, true, null, function() {}, {});
+	
+	set.add(undefined).add(false);
+	set.remove(null, 3, "a", true);
+	console.log(set);
+	var obj = {
+		p : "cad"
+	}
+	set.forEach(function(value) {
+		this.p = "abc";
+	}, obj);
+	alert(obj.p);
+	//alert(set.contains("b"));
+	
+	for (var i = 0; i < 50; i++) {
+		console.log(Math.floor(Math.random() * 10));
+	}
+	
+	function inherit(o) {
+		if (Object.create) return Object.create(o);
+		
+		var t = typeof o;
+		if (t !== "object" && t !== "function") throw new TypeError();
+		function f() {}
+		f.prototype = o;
+		return new f();
+	}
+	
+	function enumaration(namesToValues) {
+		var enumaration = function() {
+			throw "Can't be initilized";
+		};
+		
+		var proto = enumaration.prototype = {
+			constructor : enumaration,
+			toString : function() {
+				return this.name;
+			},
+			valueOf : function() {
+				return this.value;
+			},
+			toJSON : function() {
+				return this.name;
+			}
+		};
+		
+		enumaration.values = [];
+		
+		for (var name in namesToValues) {
+			var e = inherit(proto);
+			e.name = name;
+			e.value = namesToValues[name];
+			enumaration[name] = e;
+			enumaration.values.push(e);
+		}
+		
+		enumaration.foreach = function(f, c) {
+			for (var i = 0; i < this.values.length; i++) {
+				f.call(c, this.values[i]);
+			}
+		};
+		
+		return enumaration;
+	}
+	
+	function Card(suit, rank) {
+		this.suit = suit;
+		this.rank = rank;
+	}
+	
+	Card.Suit = enumaration({
+		Clubs : 1,
+		Diamonds : 2,
+		Hearts : 3,
+		Spades : 4
+	});
+	
+	Card.Rank = enumaration({
+		Two : 2,
+		Three : 3,
+		Four : 4,
+		Five : 5,
+		Six : 6,
+		Seven : 7,
+		Eight : 8,
+		Nine : 9,
+		Ten : 10,
+		Jack : 11,
+		Queen : 12,
+		King : 13,
+		Ace : 14
+	});
+	Card.prototype.toString = function() {
+		return this.suit + ": " + this.rank;
+	};
+	Card.prototype.compareTo = function(card) {
+		if (this.rank > card.rank) return 1;
+		if (this.rank < card.rank) return -1;
+		return 0;
+	};
+	Card.orderByRank = function(a, b) {
+		return a.compareTo(b);
+	};
+	Card.orderBySuit = function(a, b) {
+		if (a.suit < b.suit) return -1;
+		if (a.suit > b.suit) return 1;
+		return Card.orderByRank(a, b);
+	};
+	
+	function Deck() {
+		var cards = this.cards = [];
+		Card.Suit.foreach(function(s) {
+			Card.Rank.foreach(function(r) {
+				cards.push(new Card(s, r));
+			});
+		});
+		this.shuffle();
+	}
+	
+	Deck.prototype.shuffle = function() {
+		var deck = this.cards, len = deck.length;
+		for (var i = len - 1; i > 0; i--) {
+			var r = Math.floor(Math.random() * i), temp;
+			temp = deck[i];
+			deck[i] = deck[r];
+			deck[r] = temp;
+		}
+		
+		return this;
+	};
+	
+	Deck.prototype.deal = function(n) {
+		if (this.cards.length < n) throw "Out of cards";
+		return this.cards.splice(this.cards.length - n, n);
+	}
+	
+	var deck = new Deck();
+	var hand = deck.deal(13).sort(Card.orderBySuit);
+	console.log(hand);
+	alert(JSON.stringify(Card.Suit.Hearts));
+	//alert(Card.Suit.Diamonds < Card.Suit.Hearts);
+	
+	
+	function Set() {
+		this.values = {};
+		this.n = 0;
+		this.add.apply(this, arguments);
+	}
+	
+	Set.prototype.add = function() {
+		for (var i = 0; i < arguments.length; i++) {
+			var key = Set._v2s(arguments[i]);
+			if (this.values.hasOwnProperty(key)) continue;
+			this.values[key] = arguments[i];
+			this.n++;
+		}
+		return this;
+	};
+	
+	Set.prototype.remove = function() {
+		for (var i = 0; i < arguments.length; i++) {
+			var key = Set._v2s(arguments[i]);
+			if (this.values.hasOwnProperty(key)) {
+				delete this.values[key];
+				this.n--;
+			}
+		}
+		return this;
+	};
+	
+	Set.prototype.foreach = function(f, c) {
+		for (var key in this.values) {
+			if (this.values.hasOwnProperty(key)) {
+				f.call(c, this.values[key]);
+			}
+		}
+	};
+	
+	Set.prototype.contains = function(val) {
+		return this.values.hasOwnProperty(Set._v2s(val));
+	};
+	
+	Set.prototype.size = function() {
+		return this.n;
+	}
+	
+	Set._v2s = function(val) {
+		switch(val) {
+			case undefined : return "u";
+			case null : return "n";
+			case true : return "t";
+			case false : return "f";
+			default : 
+				switch(typeof val) {
+					case "number" : return "#" + val;
+					case "string" : return "''" + val;
+					default : return "@" + objectId(val);
+				}
+		}
+		
+		function objectId(o) {
+			var prop = "|**object**|";
+			if (prop in o) return o[prop];
+			return o[prop] = Set._v2s.next++;
+		}
+	};
+	
+	Set._v2s.next = 100;
+	
+	function f() {
+		alert(arguments.length);
+		arguments["name"] = "abc";
+		alert(arguments.length);
+		for (var prop in arguments) {
+			//alert(prop + ": " + arguments[prop]);
+		}
+	}
+	//f(1, "a");
+	//alert("a" + null);
+	function extend(o, p) {
+		for (var prop in p) {
+			o[prop] = p[prop];
+		}
+	}
+
+	extend(Set.prototype, {
+		toString : function() {
+			var s = "{", i = 0;
+			this.foreach(function(value) {
+				s += (i++ == 0 ? "" : ", ") + value;
+			});
+			return s + "}";
+		},
+		toLocaleString: function() {
+			var s = "{", i = 0;
+			this.foreach(function(value) {
+				if (i++ > 0) s += ", ";
+				if (value == null) s += value;
+				else s += value.toLocaleString();
+			});
+			return s + "}";
+		},
+		toArray : function() {
+			var arr = [];
+			this.foreach(function(value) {
+				arr.push(value);
+			});
+			return arr;
+		}
+	});
+	
+	Set.prototype.toJSON = Set.prototype.toArray;
+	
+	var set = new Set("daf", 1, true, [4, 6], {}, null);
+	console.log(set);
+	
+	//alert(set);
+	//alert(set.toLocaleString());
+	//alert(set.toArray());
+	alert(set.toJSON());
+	
+		function type(o) {
+		if (o === undefined) return "undefined";
+		if (o === null) return "null";
+		if (o !== o) return "NaN";
+		
+		var t, c, n;
+		if ((t = typeof o) !== "object") return t;
+		if ((c = classof(o)) !== "Object") return c;
+		if (o.constructor && typeof o.constructor === "function" && (n = getName(o.constructor))) return n;
+		
+		return "Object";
+	}
+	
+	function classof(o) {
+		if (o === undefined) return "undefined";
+		if (o === null) return "null";
+		return Object.prototype.toString.call(o).slice(8, -1);
+	}
+	
+	function getName(c) {
+		if ("name" in c) return c.name;
+		return c.name = c.toString().match(/^function\s*([^(]*)\(/);
+	}
+	
+	var o = {
+		constructor : getName,
+		f : function() {}
+	};
+	
+	//alert(type(o));
+	//alert(classof(type));
+	
+	function quacks(o) {
+		if (o == null) return false;
+		
+		for (var i = 1; i < arguments.length; i++) {
+			var arg = arguments[i];
+			switch(typeof arg) {
+				case "string" : 
+					if (typeof o[arg] !== "function") return false;
+				continue;
+				case "function" :
+					arg = arg.prototype;
+				case "object" :
+					for (var m in arg) {
+						if (typeof arg[m] !== "function") continue;
+						if (typeof o[m] !== "function") return false;
+					}
+			}
+		}
+		
+		return true;
+	}
+
+	function F() {}
+	
+	F.prototype = {
+		f : function() {
+			return 1;
+		}
+	};
+	
+	//alert(quacks(o, "constructor", F, {
+	//	a : function() {}
+	//}));
+	
+	Set.prototype.equals = function(that) {
+		if (this === that) return true;
+		if (!(that instanceof Set)) return false;
+		
+		if (this.size() != that.size()) return false;
+		
+		try {
+			this.values.foreach(function(value) {
+				if (!that.values.contains(value)) throw false;
+			});
+			return true;
+		} catch(e) {
+			if (e === false) return false;
+			throw e;	// throw other exception
+		}
+	};
+	
+	function filteredSetSubclass(superClass, filter) {
+		var constructor = function() {
+			superClass.apply(this, arguments);
+		};
+		
+		var proto = constructor.prototype = inherit(superClass.prototype);
+		proto.constructor = constructor;
+		proto.add = function() {
+			for (var i = 0; i < arguments.length; i++) {
+				var v = arguments[i];
+				if (!filter(v)) throw("value " + v + " rejected by filter");
+			}
+				
+			superClass.prototype.add.apply(this, arguments);
+		};
+		return constructor;
+	}
+	
+	function defineClass(constructor, methods, statics) {
+		if (methods) extend(constructor.prototype, methods);
+		if (statics) extend(constructor, statics);
+		return constructor;
+	}
+	
+	function defineSubClass(superClass, constructor, methods, statics) {
+		constructor.prototype = inherit(superClass.prototype);
+		constructor.prototype.constructor = constructor;
+		if (methods) extend(constructor.prototype, methods);
+		if (statics) extend(constructor, statics);
+		return constructor;
+	}
+	
+	Function.prototype.extend = function(constructor, methods, statics) {
+		return defineSubClass(this, constructor, methods, statics);
+	};
+	
+	function SingletonSet(member) {
+		this.member = member;
+	}
+	
+	defineSubClass(Set, SingletonSet, {
+		add : function() {
+			throw "read-only set";
+		},
+		remove : function() {
+			throw "read-only set";
+		},
+		size : function() {
+			return 1;
+		},
+		contains : function(val) {
+			return val === this.member;
+		},
+		foreach : function(f, context) {
+			f.call(context, this.member);
+		}
+	});
+	
+	var singleSet = new SingletonSet(4);
+	//singleSet.add(4);
+	var set = new Set([4], "i");
+	//alert(singleSet.contains(4));
+	//alert(singleSet.equals(set));
+	
+	function NotNullSet() {
+		Set.apply(this, arguments);
+	}
+	
+	defineSubClass(Set, NotNullSet, {
+		add : function() {
+			for (var i = 0; i < arguments.length; i++) {
+				if (arguments[i] == null) throw new Error("Can't add null or undefined to a NotNullSet");
+			}
+			
+			return Set.prototype.add.apply(this, arguments);
+		}
+	});
+	
+	var notNullSet = new NotNullSet("a", 0);
+	//console.log(notNullSet);
+	
+	function filteredSetSubclass(superClass, filter) {
+		var constructor = function() {
+			superClass.apply(this, arguments);
+		};
+		defineSubClass(superClass, constructor, {
+			add : function() {
+				for (var i = 0; i < arguments.length; i++) {
+					var v = arguments[i];
+					if (!filter(v)) throw("value " + v + " rejected by filter");
+				}
+				superClass.prototype.add.apply(this, arguments);
+			}
+		});
+		return constructor;
+	}
+	
+	var StringSet = filteredSetSubclass(Set, function(v) {
+		return typeof v === "string";
+	});
+	
+	var stringSet = new StringSet("a", "3", "adf");
+	console.log(stringSet.__proto__.constructor === StringSet.prototype.constructor);
+	
+	function G() {
+	
+	}
+	
+	var g = new G();
+	console.log(g.constructor);
+	
+	var general = {
+		toString : function() {
+			var s = "[";
+			if (this.constructor && this.constructor.name)
+				s += this.constructor.name + ": ";
+				
+			var i = 0;
+			for (var name in this) {
+				if (!this.hasOwnProperty(name)) continue;
+				if (typeof this[name] === "function") continue;
+				if (i++) s += ", ";
+				s += name + "=" + this[name];
+			}
+			return s + "]";
+		},
+		equals : function(that) {
+			if (that == null) return false;
+			if (this.constructor !== that.constructor) return false;
+			for (var name in this) {
+				if (!this.hasOwnProperty(name)) continue;
+				if (name === "|**object**|") continue;
+				if (this[name] !== that[name]) return false;
+			}
+			return true;
+		}
+	};
+	
+	function isArrayLike(o) {
+		if (o && typeof o === "object" && isFinite(o.length) && o.length >= 0 && o.length == Math.floor(o.length) && o.length < Math.pow(2, 32)) {
+			return true;
+		}
+		return false;
+	}
+	
+	function Set() {
+		this.values = {};
+		this.n = 0;
+		
+		var args;
+		if (arguments.length == 1 && isArrayLike(arguments[0]))
+			this.add.apply(this, arguments[0]);
+		else if (arguments.length > 0)
+			this.add.apply(this, arguments);
+	}
+	
+	Set.prototype.add = function() {
+		for (var i = 0; i < arguments.length; i++) {
+			if (isArrayLike(arguments[i]))
+				this.add.apply(this, arguments[i]);
+			else {
+				var key = Set._v2s(arguments[i]);
+				if (!this.values.hasOwnProperty(key)) {
+					this.values[key] = arguments[i];
+					this.n++;
+				}
+			}
+		}
+		return this;
+	};
+	
+	Set.prototype.size = function() {
+		return this.n;
+	};
+	
+	Set.prototype.contains = function(v) {
+		return this.values.hasOwnProperty(Set._v2s(v));
+	};
+	
+	Set.prototype.foreach = function(f, context) {
+		for (var key in this.values) {
+			if (this.values.hasOwnProperty(key)) {
+				f.call(context, this.values[key]);
+			}
+		}
+	};
+	
+	Set.prototype.equals = function(that) {
+		if (this === that) return true;
+		if (!(that instanceof Set)) return false;
+		
+		if (this.size() !== that.size()) return false;
+		
+		try {
+			this.foreach(function(v) {
+				if (!that.contains(v)) throw false;
+			});
+		} catch(x) {
+			if (x === false) return false;
+			throw x;
+		}
+		
+		return true;
+	};
+	
+	Set._v2s = function(val) {
+		switch(val) {
+			case undefined : return "u";
+			case null : return "n";
+			case true : return "t";
+			case false : return "f";
+			default : 
+				switch(typeof val) {
+					case "number" : return "#" + val;
+					case "string" : return "''" + val;
+					default : return "@" + objectId(val);
+				}
+		}
+		
+		function objectId(o) {
+			var prop = "|**object**|";
+			if (prop in o) return o[prop];
+			return o[prop] = Set._v2s.next++;
+		}
+	};
+	
+	Set._v2s.next = 100;
+	
+	//var set = new Set(1, true, {}, [4, "u", [9, "a"], 3, [88, [45, 23, "uo"], "bas"], {s : "ss", "t" : //"tt"}], undefined);
+	
+	//Set.prototype.toString = general.toString;
+	
+	//console.log(set);
+	
+	//var f = Set.bind({}, ["o", 1, [4, "a"], 9]);
+	//var set2 = new f();
+	//console.log(set2);
+	//alert(set2 instanceof Set);
+	
+	//alert(isArrayLike({
+	//	length : null
+	//}));
+	
+	//alert(null == 0);
+	
+	function inherit(o) {
+		if (Object.create) return Object.create(o);
+		var t = typeof o;
+		if (t !== "object" && t !== "function") throw new TypeError();
+		var F = function() {};
+		F.prototype = o;
+		return new F();
+	}
+	
+	function extend(o, p) {
+		for (var prop in p) {
+			o[prop] = p[prop];
+		}
+	}
+	
+	function defineClass(constructor, methods, statics) {
+		if (methods) extend(constructor.prototype, methods);
+		if (statics) extend(constructor, statics);
+		return constructor;
+	}
+	
+	function defineSubClass(superClass, constructor, methods, statics) {
+		var proto = constructor.prototype = inherit(superClass.prototype);
+		proto.constructor = constructor;
+		if (methods) extend(proto, methods) ;
+		if (statics) extend(constructor, statics);
+		return constructor;
+	}
+	
+	Function.prototype.extend = function(constructor, methods, statics) {
+		return defineSubClass(this, constructor, methods, statics);
+	};
+	
+	
+	//var NotNullSet = (function(superClass) {
+	//	return superClass.extend(function() {
+	//		superClass.apply(this, arguments);
+	//	}, {
+	//		add : function() {
+	//			for (var i = 0; i < arguments.length; i++) {
+	//				var v = arguments[i];
+	//				if (v == null) throw new Error("Can't add null or undefined to a NotNullSet");
+	//			}
+				
+	//			return superClass.prototype.add.apply(this, arguments);
+	//		}
+	//	});
+	//}(Set));
+	
+	//var notNullSet = new NotNullSet("a", "c", "p");
+	//notNullSet.foreach(function(v) {
+		//alert(v);
+	//});
+	
+	
+	
+	//var NotNullSet = (function(constructor) {
+	//	return defineClass(function() {
+	//		constructor.apply(this, arguments);
+	//	}, {
+	//		add : function() {
+	//			for (var i = 0; i < arguments.length; i++)
+	//				if (arguments[i] == null)
+	//					throw new Error("Can't add null or undefined to a NotNullSet");
+	//			return constructor.prototype.add.apply(this, arguments);
+	//		},
+	//		size : function() {
+	//			return constructor.prototype.size.call(this);
+	//		}
+	//	});
+	//}(Set));
+	
+	//var notNullSet = new NotNullSet(9, 12, "a");
+	//alert(notNullSet.size());
+	
+	var FilteredSet = Set.extend(function FilteredSet(set, filter) {
+		this.set = set;
+		this.filter = filter;
+	}, {
+		add : function() {
+			if (!this.filter) {
+				for (var i = 0; i < arguments.length; i++) {
+					var v = arguments[i];
+					if (this.filter(v)) throw("value " + v + " rejected by filter");
+				}
+			}
+			this.set.add.apply(this.set, arguments);
+			return this;
+		},
+		remove : function() {
+			this.set.remove.apply(this.set, arguments);
+			return this;
+		},
+		size : function() {
+			return this.set.size();
+		},
+		contains : function(value) {
+			return this.set.contains(value);
+		},
+		foreach : function(f, c) {
+			this.set.foreach(f, c);
+		}
+	});
+	
+	var notNullSet = new FilteredSet(new Set(), function(x) {
+		return x !== null;
+	});
+	
+	notNullSet.add(1, "o");
+	//alert(notNullSet.contains("o"));
+	
+	function extend(o, p) {
+		for (var prop in p) {
+			o[prop] = p[prop];
+		}
+	}
+	
+	function inherit(o) {
+		if (Object.create) return Object.create(o);
+		
+		var t = typeof o;
+		if (t !=="object" && t !== "function") throw new TypeError();
+		
+		function F() {};
+		F.prototype = o;
+		return new F();
+	}
+	
+	function defineSubClass(superClass, constructor, methods, statics) {
+		var proto = constructor.prototype = inherit(superClass.prototype);
+		proto.constructor = constructor;
+		if (methods) extend(proto, methods);
+		if (statics) extend(constructor, statics);
+		return constructor;
+	}
+	
+	Function.prototype.extend = function(constructor, methods, statics) {
+		return defineSubClass(this, constructor, methods, statics);
+	};
+	
+	function abstractmethod() {throw new Error("abstract method");}
+	
+	function AbstractSet() {throw("Can't initialize abstract classes");}
+	
+	AbstractSet.prototype.contains = abstractmethod;
+	
+	var NotSet = AbstractSet.extend(function(set) {
+		this.set = set;
+	}, {
+		contains : function(v) {
+			return !this.set.contains(v);
+		},
+		toString : function() {
+			return "~" + this.set.toString();
+		},
+		equals : function(that) {
+			return that instanceof AbstractSet && this.set.equals(that.set);
+		}
+	});
+	
+	var AbstractEnumarableSet = AbstractSet.extend(function() {
+		throw("Can't initialize abstract classes");
+	}, {
+		size : abstractmethod,
+		foreach : abstractmethod,
+		isEmpty : function() {return this.size() == 0;},
+		toString : function() {
+			var s = "{", n = 0;
+			
+			this.foreach(function(v) {
+				if (n++) s += ", ";
+				s += v;
+			});
+			return s + "}";
+		},
+		toLocaleString: function() {
+			var s = "{", n = 0;
+			
+			this.foreach(function(v) {
+				if (n++) s += ", ";
+				if (v == null) s += v;
+				else s += v.toLocaleString();
+			});
+			return s + "}";
+		},
+		toArray : function() {
+			var a = [];
+			this.foreach(function(v) {
+				a.push(v);
+			});
+			return a;
+		},
+		equals : function(that) {
+			if (!(that instanceof AbstractEnumarableSet)) return false;
+			if (this.size() !== that.size()) return false;
+			
+			try {
+				this.foreach(function(v) {
+					if (!that.contains(v)) throw false;
+				});
+			} catch(x) {
+				if (x === false) return false;
+				throw x;
+			}
+			return true;
+		}
+	});
+	
+	var SingletonSet = AbstractEnumarableSet.extend(function(member) {
+		this.member = member;
+	}, {
+		size : function() {return 1;},
+		contains : function(v) {return this.member === v;},
+		foreach : function(f, ctx) {
+			f.call(ctx, this.member);
+		}
+	});
+	
+	var AbstractWritableSet = AbstractEnumarableSet.extend(function() {
+		throw("Can't initialize abstract classes");
+	}, {
+		add : abstractmethod,
+		remove : abstractmethod,
+		union : function(that) {
+			var self = this;
+			that.foreach(function(v) {
+				if (!self.contains(v)) self.add(v);
+			});
+			return this;
+		},
+		intersection : function(that) {
+			var self = this;
+			this.foreach(function(v) {
+				if (!that.contains(v)) self.remove(v);
+			});
+			return this;
+		},
+		difference : function(that) {
+			var self = this;
+			that.foreach(function(v) {
+				self.remove(v);
+			});
+			return this;
+		}
+	});
+	
+	var ArraySet = AbstractWritableSet.extend(function() {
+		this.values = [];
+		this.add.apply(this, arguments);
+	}, {
+		add : function() {
+			for (var i = 0; i < arguments.length; i++) {
+				var v = arguments[i];
+				if (!this.contains(v))
+					this.values.push(v);
+			}
+			return this;
+		},
+		remove : function() {
+			for (var i = 0; i < arguments.length; i++) {
+				var p = this.values.indexOf(arguments[i]);
+				if (p == -1) continue;
+				this.values.splice(p, 1);
+			}
+			return this;
+		},
+		contains : function(v) {return this.values.indexOf(v) != -1;},
+		size : function() {return this.values.length;},
+		foreach : function(f, ctx) {
+			this.values.forEach(f, ctx);
+		}
+	});
+	
+	var singleSet = new SingletonSet("abc");
+	//alert(singleSet.contains("abc"));
+	var arraySet = new ArraySet(2, "xxx", null);
+	//alert(arraySet.remove(null).add(54));
+	
+	(function() {
+		Object.defineProperty(Object.prototype, "objectId", {
+			get : idGetter,
+			enumarable : false,
+			configurable : false
+		});
+		
+		function idGetter() {
+			if (!(idprop in this)) {
+				if (!Object.isExtensible(this))
+					throw Error("Can't define id for nonextensible objects");
+				Object.defineProperty(this, idprop, {
+					value : nextid++,
+					writable : false,
+					enumarable : false,
+					configurable : false
+				});
+			}
+			return this[idprop];
+		}
+		
+		var idprop = "|**objectid**|";
+		var nextid = 1;
+	}());
+	
+	var o = {
+		name : "xxx"
+	};
+	
+	var b = "name";
+	//alert(o.b);
+	//alert(o["|**objectid**|"]);
+	alert(o["objectId"]);
+	//alert(o["|**objectid**|"]);
+	console.log(o);
+	//Object.defineProperty(o, "age", {
+	//	value : 100
+	//});
+	//console.log(o);
+	
+	var o = {
+		//xxx : function() {}
+	};
+	//alert(Object.getOwnPropertyNames(o).toString);
+	//alert(Object.getOwnPropertyDescriptor(o, "xxx").configurable);
+	//alert(Object.getOwnPropertyDescriptor(o, "toString").configurable);
+	
+	function Range(from, to) {
+		var props = {
+			from : {
+				value : from
+			},
+			to : {
+				value : to
+			}
+		};
+		
+		if (this instanceof Range)
+			Object.defineProperties(this, props);
+		else 
+			return Object.create(Range.prototype, props);
+	}
+	
+	Object.defineProperties(Range.prototype, {
+		includes : {
+			value : function(x) {
+				return this.from <= x && x <= this.to;
+			},
+			enumarable : true,
+			configurable : true
+		},
+		toString : {
+			value : function() {
+				return "(" + this.from + "..." + this.to + ")";
+			}
+		},
+		foreach : {
+			value : function(f) {
+				for (var i = Math.ceil(this.from); i <= this.to; i++)
+					f(i);
+			}
+		}
+	});
+	
+	var range = Range(1, 5);
+	//alert(range.constructor === Range);
+	
+	function inherit(o) {
+		if (Object.create) return Object.create(o);
+		
+		var t = typeof o;
+		if (t !=="object" && t !== "function") throw new TypeError();
+		
+		function F() {};
+		F.prototype = o;
+		var obj = new F();
+		//alert(obj.constructor);
+		return obj;
+	}
+	
+	var obj = inherit(Range.prototype);
+	//alert(obj.constructor === Range);
+	
+	Object.defineProperty(o, "xxx", {
+		value : "abc"
+	});
+	
+	//alert(Object.getOwnPropertyDescriptor(o, "xxx").configurable);
+	
+	function Range(from, to) {
+		var props = {
+			from : {
+				value : from,
+				enumerable : true,
+				writable : false,
+				configurable : false
+			},
+			to : {
+				value : to,
+				enumerable : true,
+				writable : false,
+				configurable : false
+			}
+		};
+		
+		if (this instanceof Range)
+			Object.defineProperties(this, props);
+		else
+			return Object.create(Range.prototype, props);
+	}
+	
+	Object.defineProperties(Range.prototype, {
+		includes : {
+			value : function(x) {
+				return this.from <= x && x <= this.to;
+			}
+		},
+		toString : {
+			value : function() {
+				return "(" + this.from + "..." + this.to + ")";
+			}
+		},
+		foreach : {
+			value : function(f) {
+				for (var x = Math.ceil(this.from); x <= this.to; x++) f(x);
+			}
+		}
+	});
+	
+	var range = new Range(2.3, 6);
+	range.foreach(function(x) {
+		//alert(x);
+	});
+	
+	range.from = 999;
+	//alert(range.from);
+	//alert(range.includes(6));
+	//alert(range.toString());
+	
+	//var o = {
+	//	a : 1
+	//};
+	
+	//for (var key in o) {
+	//	alert(key);
+	//}
+	
+	for (key in range) {
+		//alert(key);
+	}
+	
+	function freezeProps(o) {
+		var props;
+		if (arguments.length == 1)
+			props = Object.getOwnPropertyNames(o);
+		else
+			props = Array.prototype.splice.call(arguments, 1);
+		
+		props.forEach(function(p) {
+			if (!Object.getOwnPropertyDescriptor(o, p).configurable) return;
+			Object.defineProperty(o, p, {
+				configurable : false
+			});
+		});
+		
+		return o;
+	}
+	
+	function hideProps(o) {
+		var props = arguments.length == 1 ? Object.getOwnPropertyNames(o) : Array.prototype.splice.call(arguments, 1);
+		props.forEach(function(p) {
+			if (!Object.getOwnPropertyDescriptor(o, p).enumerable) return;
+			Object.defineProperty(o, p, {
+				enumerable : false
+			});
+		});
+		return o;
+	}
+	
+	function Range(from, to) {
+		var props = this instanceof Range ? this : Object.create(Range.prototype);
+		props.from = from;
+		props.to = to;
+		return freezeProps(props);
+	}
+	
+	Range.prototype = hideProps({
+		constructor : Range,
+		includes : function(x) {
+			return this.from <= x && x <= this.to;
+		},
+		toString : function() {
+			return "(" + this.from + "..." + this.to + ")";
+		},
+		foreach : function(f) {
+			for (var x = Math.ceil(this.from); x <= this.to; x++) f(x);
+		}
+	});
+	
+	var range = Range(3.33, 5);
+	//alert(range);
+	//range.to = 3434;
+	//alert(range.to);	//yes
+	for (key in range) {
+		//alert(key);
+	}
+	
+	range.foreach(function(x) {
+		alert(x);
+	});
+	
+	var o = {
+		a : 1,
+		b : 2
+	};
+	
+	//alert(o.__proto__ === Object.prototype);
+	o.constructor = Range;
+	//alert(o.__proto__ === Range.prototype);
+	//alert(Object.getOwnPropertyDescriptor(o, "a").configurable);
+	
+	//freezeProps(o, "b");
+	//hideProps(o);
+	//for (key in o) {
+	//	alert(key);
+	//}
+	//alert(Object.getOwnPropertyDescriptor(o, "a").configurable);
+	//alert(Object.getOwnPropertyDescriptor(o, "b").configurable);
+	
+	//for (var key in Object.getOwnPropertyNames(o)) {
+	//	alert(key);
+	//}
+	
+	function Range(from, to) {
+		if (from > to)
+			throw new Error("Range: from must <= to");
+		function setFrom(f) {
+			if (f > to)
+				throw new Error("Range: from must <= to");
+			from = f;
+		}
+		function getFrom() {
+			return from;
+		}
+		function setTo(t) {
+			if (t < from)
+				throw new Error("Range: from must <= to");
+			to = t;
+		}
+		function getTo() {
+			return to;
+		}
+		
+		Object.defineProperties(this, {
+			from : {
+				get : getFrom,
+				set : setFrom,
+				enumerable : true,
+				configurable : false
+			},
+			to : {
+				get : getTo,
+				set : setTo,
+				enumerable : true,
+				configurable : false
+			}
+		});
+	}
+	
+	function hideProps(o) {
+		var props = arguments.length == 1 ? Object.getOwnPropertyNames(o) : Array.prototype.splice.call(arguments, 1);
+		props.forEach(function(p) {
+			if (!Object.getOwnPropertyDescriptor(o, p).enumerable) return;
+			Object.defineProperty(o, p, {
+				enumerable : false
+			});
+		});
+		
+		return o;
+	}
+	
+	Range.prototype = hideProps({
+		constructor : Range,
+		includes : function(x) {
+			return this.from <= x && x <= this.to;
+		}
+	});
+	
+	var range = new Range(1, 5);
+	//alert(range.includes(3));
+	range.from = 3;
+	alert(range.includes(4));
+	
+	function inherit(o) {
+		if (Object.create) return Object.create(o);
+		
+		var t = typeof o;
+		if (t !== "object" && t !== "function") throw new TypeError();
+		function F() {}
+		F.prototype = o;
+		return new F();
+	}
+	
+	function extend(o, p) {
+		for (var prop in p) {
+			o[prop] = p[prop];
+		}
+	}
+	
+	function defineSubClass(superClass, constructor, methods, statics) {
+		var proto = constructor.prototype = inherit(superClass.prototype);
+		if (methods) extend(proto, methods);
+		if (statics) extend(constructor, statics);
+		return constructor;
+	}
+	
+	Function.prototype.extend = function(constructor, methods, statics) {
+		return defineSubClass(this, constructor, methods, statics);
+	}
+	
+	function abstractmethod() {throw new Error("abstract method");}
+	function AbstractSet() {throw new Error("Can't initialize abstract classe");}
+	AbstractSet.prototype.contains = abstractmethod;
+	
+	var AbstractEnumerableSet = AbstractSet.extend(function() {
+		throw new Error("Can't initialize abstract classes");
+	}, {
+		size : abstractmethod,
+		foreach : abstractmethod,
+		isEmpty : function() {
+			return this.size() === 0;
+		},
+		toString : function() {
+			var s = "{", n = 0;
+			this.foreach(function(v) {
+				if (n++) s += ", ";
+				s += v;
+			});
+			return s + "}";
+		},
+		toLocaleString : function() {
+			var s = "{", n = 0;
+			this.foreach(function(v) {
+				if (n++) s += ", ";
+				if (v == null) s += v;
+				else s += v.toLocaleString();
+			});
+			return s + "}";
+		},
+		toArray : function() {
+			var a = [];
+			this.foreach(function(v) {
+				a.push(v);
+			});
+			return a;
+		},
+		equals : function(that) {
+			if (!(that instanceof AbstractEnumerableSet)) return false;
+			if (this.size() !== that.size()) return false;
+			try {
+				this.foreach(function(v) {
+					if (!that.contains(v)) throw false;
+				});
+				return true;
+			} catch(x) {
+				if (x === false) return false;
+				throw x;
+			}
+		}
+	});
+	
+	var AbstractWritableSet = AbstractEnumerableSet.extend(function() {
+		throw new Error("Can't initialize abstract classes");
+	}, {
+		add : abstractmethod,
+		remove : abstractmethod,
+		union : function(that) {
+			var self = this;
+			that.foreach(function(v) {
+				self.add(v);
+			});
+			return this;
+		},
+		intersection : function(that) {
+			var self = this;
+			this.foreach(function(v) {
+				if (!that.contains(v)) self.remove(v);
+			});
+			return this;
+		},
+		difference : function(that) {
+			var self = this;
+			that.foreach(function(v) {
+				if (that.contains(v)) self.remove(v);
+			});
+			return this;
+		}
+	});
+	
+	function StringSet() {
+		this.set = Object.create(null);
+		this.n = 0;
+		this.add.apply(this, arguments);
+	}
+	
+	StringSet.prototype = Object.create(AbstractWritableSet.prototype, {
+		constructor : {
+			value : StringSet
+		},
+		size : {
+			value : function() {
+				return this.n;
+			}
+		},
+		contains : {
+			value : function(x) {
+				return x in this.set;
+			}
+		},
+		foreach : {
+			value : function(f, c) {
+				Object.keys(this.set).forEach(f, c);
+			}
+		},
+		add : {
+			value : function() {
+				for (var i = 0; i < arguments.length; i++) {
+					if (!this.contains(arguments[i])) {
+						this.set[arguments[i]] = true;
+						this.n++;
+					}
+				}
+				return this;
+			}
+		},
+		remove : {
+			value : function() {
+				for (var i = 0; i < arguments.length; i++) {
+					if (this.contains(arguments[i])) {
+						delete this.set[arguments[i]];
+						this.n--;
+					}
+				}
+				return this;
+			}
+		}
+	});
+	
+	var stringSet1 = new StringSet("ab", "ewr", 12);
+	var stringSet2 = new StringSet("erwe", 12, "adf");
+	stringSet1.difference(stringSet2).add("324ds").remove("ab").foreach(function(v) {
+		//alert(v);
+	});
+	//alert(stringSet1);
+	
+	//var set = new StringSet("a", 1);
+	//alert(AbstractWritableSet.prototype.toString);
+	//alert(set.add({}).remove({rt : 34}).size());
+	//alert(Function.prototype.toString === Object.prototype.toString);
+	//alert(Object.prototype.toString);
+	
+	var o = {};
+	Object.defineProperty(o, "a", {
+		//value : 1,
+		get : function() {
+			return 1;
+		}
+	});
+	o.a = 2;
+	//alert(o.a);
+	
+	var f = (function() {
+		function xxx() {
+			alert("abc");
+		}
+		//alert(xxx);
+		return function() {
+			xxx();
+		};
+	}());
+	//f();
+	//alert(xxx);
+	
+	(function namespace() {
+		function properties() {
+			var names;
+			if (arguments.length == 0)
+				names = Object.getOwnPropertyNames(this);
+			else if (arguments.length == 1 && Array.isArray(arguments[0]))
+				names = arguments[0];
+			else
+				names = Array.prototype.splice.call(arguments, 0);
+			//alert(names);
+			return new Properties(this, names);
+		}
+		
+		Object.defineProperty(Object.prototype, "properties", {
+			value : properties,
+			enumerable : false,
+			writable : true,
+			configurable : true
+		});
+		
+		function Properties(o, names) {
+			this.o = o;
+			this.names = names;
+		}
+		
+		Properties.prototype.hide = function() {
+			var o = this.o, hidden = {enumerable : false};
+			this.names.forEach(function(n) {
+				if (o.hasOwnProperty(n))
+					Object.defineProperty(o, n, hidden);
+			});
+			return this;
+		};
+		
+		Properties.prototype.freeze = function() {
+			var o = this.o, frozen = {
+				writable : false,
+				configurable : false
+			};
+			this.names.forEach(function(n) {
+				if (o.hasOwnProperty(n))
+					Object.defineProperty(o, n, frozen);
+			});
+			return this;
+		};
+		
+		Properties.prototype.descriptors = function() {
+			var o = this.o, desc = {};
+			this.names.forEach(function(n) {
+				if (o.hasOwnProperty(n))
+					desc[n] = Object.getOwnPropertyDescriptor(o, n);
+			});
+			return desc;
+		};
+		
+		Properties.prototype.toString = function() {
+			var o = this.o, names = this.names.map(nameToString);
+			//alert(Object.prototype.toString.call(this.names));
+			return "{\n " + names.join("\n ") + "\n}";
+			
+			function nameToString(n) {
+				var s = "", desc = Object.getOwnPropertyDescriptor(o, n);
+				if (!desc) return "nonexistent " + n + ": undefined";
+				if (!desc.enumerable) s += "hidden ";
+				if (!desc.configurable) s += "permanent ";
+				if (desc.get && !desc.set || !desc.writable) s += "readonly ";
+				if (desc.get || desc.set) s += "accessor " + n;
+				else s += n + ": " + (typeof desc.value === "function" ? "function" : desc.value);
+				return s;
+			}
+		};
+		
+		Properties.prototype.properties().hide();
+	}());
+	
+	function g() {
+		//alert(!arguments);
+	}
+	g();
+	
+	var obj = {
+		a : 1,
+		b : 2,
+		c : 3
+	};
+	//alert(Array.isArray(obj));
+	var properties = obj.properties("a", "c", "w3e");
+	//alert(Object.prototype.map);
+	//alert(properties);
+	//alert(properties.freeze());
+	
+	var a = [1, 2, 3];
+	var aa = a.map(function(e) {
+		return e + 1;
+	});
+	
+	//alert(aa);
+	
+	//alert(obj.properties());
+	
+	var global = "abc";
+	var global;
+	//alert(global);
+	
+	var collections = {
+		sets : {
+			a : 1
+		}
+	};
+	
+	var collections;
+	if (!collections) collections = {};
+	alert(collections.sets.a);
+	collections.sets = {};
+	alert(collections.sets.a);
+	
+	//var pattern = /['"][^'"]*['"]/;
+	//var pattern = /a/;
+	//var s = "'\"";
+	
+	//var pattern = /java$/i;
+	//var s = "Java\nis fun";
+	//var pattern = /0/;
+	//var s = "000";
+	//alert(pattern.test(s));
+	//alert("100".search(/0/));
+	var ss = '"sdadsa"'.replace(/"([^"]*)"/g, '“$1”');
+	//alert(ss === '“sdadsa”');
+	//alert(/java/.exec("asdfsdf"));
+	//alert("javascriptjavascript".match(/(java)(script)/g));
+	//alert(/(java)(script)/.exec("javascriptjavascript"));
+	
+	//"use strict";
+	var pattern = /Java/g;
+	var text = "JavaScript is more fun than Java!";
+	var result;
+	while ((result = pattern.exec(text)) != null) {
+		//alert(result.input);
+		//alert("Matched '" + result[0] + "'" + " at position " + result.index + "; next search begins at " + pattern.lastIndex);
+		//pattern = /Java/g;
+	}
+	//alert(pattern.lastIndex);
+	
+	window.onload = function() {
+		document.write(123242);
+	}
+	
+	function invoke(f, start, interval, end) {
+		var h;
+		setTimeout(function repeat() {
+			f();
+			h = setTimeout(repeat, interval);
+		}, start);
+		setTimeout(function() {
+			clearTimeout(h);
+		}, start + end);
+	}
+	
+	function f() {
+		document.write(new Date());
+	}
+	
+	invoke(f, 500, 500, 2000);
+	
+	//document.write(navigator.userAgent);
+	
+	do {
+		var name = prompt("What's your name?");
+		var result = confirm("You entered: " + name);
+	} while (!result);
+	alert("Hello, " + name);
+	
+	function parent(e, n) {
+		if (n === undefined) n = 1;
+		while (n-- && e) e = e.parentNode;
+		if (!e || e.nodeType !== 1) return null;
+		return e;
+	}
+	
+	function sibling(e, n) {
+		while (e && n !== 0) {
+			if (n > 0) {
+				if (e.nextElementSibling) e = e.nextElementSibling;
+				else for (e = e.nextSibling; e && e.nodeType !== 1; e = e.nextSibling);
+				n--;
+			} else {
+				if (e.previousElementSibling) e = e.previousElementSibling;
+				else for (e = e.previousSibling; e && e.nodeType !== 1; e = e.previousSibling);
+				n++;
+			}
+		}
+		return e;
+	}
+	
+	function child(e, n) {
+		
+		if (e.children) {
+			if (n < 0) n += e.children.length;
+			if (n < 0) return null;
+			return e.children[n];
+		}
+		
+		
+		//if (n >= 0) 
+		//	if (e.firstElementChild) {
+		//		e = e.firstElementChild;
+		//		while (n-- > 1) {
+		//			e = e.nextElementSibling;
+		//		}
+		//	} else
+		//		for (e = e.firstChild; e; e = e.nextSibling) {
+		//			if (e.nodeType === 1)
+		//				if (!n || !--n) break;
+		//		}				
+		//else for (e = e.lastChild; e; e = e.previousSibling) 
+		//	if (e.nodeType === 1)
+		//		if (!++n) break;
+		
+		
+		if (n >= 0) {
+			if (e.firstElementChild) e = e.firstElementChild;
+			else 
+				for (e = e.firstChild; e && e.nodeType !== 1; e = e.nextSibling);	// find the first element
+			return sibling(e, n);
+		} else {
+			if (e.lastElementChild) e = e.lastElementChild;
+			else
+				for (e = e.lastChild; e && e.nodeType !== 1; e = e.previousSibling);	// find the last element
+			return sibling(e, n + 1);
+		}
+			
+		//return e;
+	}
+	
+	Element.prototype.next = function() {
+		//if (this.nextElementSibling) return this.nextElementSibling;
+		for (var sib = this.nextSibling; sib && sib.nodeType !== 1; sib = sib.nextSibling);
+		return sib;
+	};
+	
+	function sortrows(table, n, comparator) {
+		var tbody = table.tBodies[0];
+		var rows = tbody.getElementsByTagName("tr");
+		rows = Array.prototype.slice.call(rows, 1);
+		rows.sort(function(row1, row2) {
+			var cell1 = row1.getElementsByTagName("td")[n];
+			var cell2 = row2.getElementsByTagName("td")[n];
+			var val1 = cell1 && (cell1.textContent || cell1.innerText);
+			var val2 = cell2 && (cell2.textContent || cell2.innerText);
+			if (comparator) return comparator(val1, val2);
+			if (val1 > val2) return 1;
+			else if (val1 < val2) return -1;
+			return 0;
+		});
+		for (var i = 0; i < rows.length; i++) {
+			tbody.appendChild(rows[i]);
+		}
+	}
+	
+	function makeSortable(table) {
+		for (var i = 0, headers = table.getElementsByTagName("th"); i < headers.length; i++) {
+			headers[i].onclick = (function(n) {
+				return function() {
+					sortrows(table, n);
+				};
+			}(i));
+		}
+	}
+	
+	//console.log(window.open());
+	//alert(self);
+	
+	window.onload = function() {
+		//alert(document.getElementById("xxx").contentWindow === frames[0]);
+		//alert(document.getElementsByTagName("html")[0] === document.documentElement);	//true
+		//alert(document.querySelectorAll);
+		var spanElem = document.getElementsByTagName("span")[0];
+		//alert(spanElem.firstChild.firstChild.nodeValue);
+		//alert(spanElem.firstElementChild.nodeName);
+		//alert(sibling(spanElem, 8));
+		//alert(spanElem.nextElementSibling);
+		//var a = null;
+		//alert(a-- === 0);
+		//alert(a-- == 0);
+		//alert(parent(spanElem, null));
+		//alert(parent(spanElem, 2));
+		//alert(sibling(spanElem, -3));
+		//alert(child(spanElem, -2).nodeName);
+		//alert(spanElem.next());
+		//alert(spanElem.textContent);
+		//for (var p in Node.prototype) {
+		//	document.write(p + "<br/>");
+		//}
+		
+		//var table = document.getElementsByTagName("table")[0];
+		//makeSortable(table);
+		//sortrows(table, 0);
+		//document.body.appendChild(spanElem);
+		//alert(Object.__defineGetter__);
+		//alert(spanElem.outerHTML);
+		var userid = document.getElementById("userid");
+		//alert(userid.nextSibling);
+		//document.forms[0].insertBefore(document.createElement("div"), userid.nextSibling);
+				//alert(container.innerHTML);
+		//alert(Element.prototype.insertAdjacentHTML);
+		//Insert.before(spanElem, "<p></p>");
+		//spanElem.insertAdjacentHTML("beforebegin", "<strong>486sdfd</strong>");
+		//alert(DocumentFragment);
+		//Insert.after(spanElem, "<b></b>");
+		//Insert.atStart(spanElem, "<p></p>");
+		//spanElem.insertAdjacentHTML("beforeend", "<em></em>");
+		
+	};
+	
+	(function() {
+		if (document.createElement("div").outerHTML) return;
+		
+		function outerHTMLGetter() {
+			var div = document.createElement("div");
+			div.appendChild(this.cloneNode(true));
+			return div.innerHTML;
+		}
+		
+		function outerHTMLSetter(value) {
+			var div = document.createElement("div");
+			div.innerHTML = value;
+			while (div.firstChild)
+				this.parentNode.insertBefore(div.firstChild, this);
+			this.parentNode.removeChild(this);
+		}
+		
+		if (Object.defineProperty) {
+			Object.defineProperty(Element.prototype, "outerHTML", {
+				get : outerHTMLGetter,
+				set : outerHTMLSetter,
+				enumerable : false,
+				configurable : true
+			});
+		} else {
+			Element.prototype.__defineGetter__("outerHTML", outerHTMLGetter);
+			Element.prototype.__defintSetter__("outerHTML", outerHTMLSetter);
+		}
+	}());
+	
+	
+	var Insert = (function() {
+		
+		if (document.createElement("div").insertAdjacentHTML)
+			return {
+				"before" : function(elt, html) {
+					elt.insertAdjacentHTML("beforebegin", html);
+				},
+				"after" : function(elt, html) {
+					elt.insertAdjacentHTML("afterend", html);
+				},
+				"atStart" : function(elt, html) {
+					elt.insertAdjacentHTML("afterbegin", html);
+				},
+				"atEnd" : function(elt, html) {
+					elt.insertAdjacentHTML("beforeend", html);
+				}
+			};
+		
+		
+		function fragment(html) {
+			var elt = document.createElement("div");
+			var frag = document.createDocumentFragment();
+			elt.innerHTML = html;
+			while (elt.firstChild)
+				frag.appendChild(elt.firstChild);
+			return frag;
+		}
+		
+		var Insert = {
+			"before" : function(elt, html) {
+				elt.parentNode.insertBefore(fragment(html), elt);
+			},
+			"after" : function(elt, html) {
+				elt.parentNode.insertBefore(fragment(html), elt.nextSibling);
+			},
+			"atStart" : function(elt, html) {
+				elt.insertBefore(fragment(html), elt.firstChild);
+			},
+			"atEnd" : function(elt, html) {
+				elt.appendChild(fragment(html));
+			}
+		};
+		
+		Element.prototype.insertAdjacentHTML = function(pos, html) {
+			switch(pos.toLowerCase()) {
+				case "beforebegin" : return Insert.before(this, html);
+				case "afterend" : return Insert.after(this, html);
+				case "afterbegin" : return Insert.atStart(this, html);
+				case "beforeend" : return Insert.atEnd(this, html);
+			}
+		};
+		
+		return Insert;
+		
+	}());
+	
+	//setTimeout(function() {
+	//	alert(234);
+	//}, 0);
+	
+	//for (var i = 0; i < 100000000; i++) {
+	//	var d = i / Math.PI;
+	//}
+	
+	//alert(i);
+	
+	"use strict";
+	
+	function onLoad(f) {
+		if (onLoad.loaded)
+			setTimeout(f, 0);
+		else if (window.addEventListener)
+			addEventListener("load", f, false);
+		else if (window.attachEvent)
+			attachEvent("onload", f);
+	}
+	
+	onLoad.loaded = false;
+	
+	onLoad(function() {
+		onLoad.loaded = true;
+	});
+	
+	function getScrollOffsets(w) {
+		var w = w || window;
+		
+		if (w.pageXOffset)
+			return {
+				x : w.pageXOffset,
+				y : w.pageYOffset
+			};
+		
+		var d = w.document;
+		if (document.compatMode === "CSS1Compat")
+			return {
+				x : d.documentElement.scrollLeft,
+				y : d.documentElement.scrollTop
+			};
+		
+		return  {
+			x : d.body.scrollLeft,
+			y : d.body.scrollTop
+		};
+	}
+	
+	function getViewportSize(w) {
+		var w = w || window;
+		
+		if (w.innerWidth)
+			return {
+				w : w.innerWidth,
+				h : w.innerHeight
+			};
+		
+		var d = w.document;
+		if (d.compatMode == "CSS1Compat")
+			return {
+				w : d.documentElement.clientWidth,
+				h : d.documentElement.clientHeight
+			};
+		return {
+			w : d.body.clientWidth,
+			h : d.body.clientHeight
+		};
+	}
+	
+	//alert(window.onload);
+	
+	onLoad(function() {
+		//alert(window.innerWidth);
+		//alert(document.documentElement.clientWidth);
+		//alert(document.body.clientWidth);
+		//alert(getViewportSize().w);
+		
+		var spanElem = document.getElementsByTagName("span")[0];
+		var b = spanElem.getBoundingClientRect();
+		//alert(b.width);
+		//alert(b.height);
+		var a = spanElem.getClientRects();
+		//alert(a.length);
+		//alert(container.getBoundingClientRect().width);
+		//alert(container.offsetWidth);
+		//alert(container.getBoundingClientRect().width === container.offsetWidth);	// true
+	});
+	
+	onLoad(function() {
+		var methods = document.forms["box"].elements.method;
+		//alert(methods);
+		for (var i = 0; i < 5; i++) {
+			//document.write(i + "<br />");
+		}
+		
+		var spanElem = document.getElementsByTagName("span")[0];
+		spanElem.writeln("a", 1, "<strong>sdfsd</strong>");
+		spanElem.close();
+	});
+	
+	Element.prototype.buffer = "";
+	
+	Element.prototype.write = function() {
+		this.buffer += Array.prototype.join.call(arguments, "");
+	};
+		
+	Element.prototype.writeln = function() {
+		this.buffer += Array.prototype.join.call(arguments, "") + "\n";
+	};
+	
+	Element.prototype.close = function() {
+		this.innerHTML = this.buffer;
+		this.buffer = "";
+	};
+	
+	//var spanElem = document.getElementsByTagName("span")[0];
+	//var es = new ElementStream("box");
+	//es.write("abc", "<em>hello</em>");
+	//es.close();
+	
+	function ElementStream(elt) {
+		if (typeof elt === "string") elt = document.getElementById(elt);
+		this.elt = elt;
+		this.buffer = "";
+	}
+	
+	ElementStream.prototype.write = function() {
+		this.buffer += Array.prototype.join.call(arguments, "");
+	};
+	
+	ElementStream.prototype.writeln = function() {
+		this.buffer += Array.prototype.join.call(arguments, "") + "\n";
+	};
+	
+	ElementStream.prototype.close = function() {
+		this.elt.innerHTML = this.buffer;
+		this.buffer = "";
+	};
+	
+	//alert(getComputedStyle(container, null).fontSize);
+	//scale(container, 3);
+	//scaleColor(container, 0.34);
+	
+	function scale(e, factor) {
+		var fontSize = parseInt(getComputedStyle(e, null).fontSize);
+		e.style.fontSize = fontSize * factor + "px";
+	}
+	
+	function scaleColor(e, factor) {
+		var color = getComputedStyle(e, null).backgroundColor;
+		var components = color.match(/[\d\.]+/g);
+		for (var i = 0; i < 3; i++) {
+			components[i] = String(Math.round(Math.min(components[i] * factor, 255)));
+		}
+		
+		if (components.length == 3)
+			e.style.backgroundColor = "rgb(" + components.join() + ")";
+		else
+			e.style.backgroundColor = "rgba(" + components.join() + ")";
+	}
+	
+	var container = document.getElementById("editor");
+	//var classList = container.classList;
+	//alert(classList);
+	//alert(Object.prototype.toString.call(classList));
+	//container.className += " xx4";
+	//alert(container.className);
+	//classList.remove("xx4");
+	//alert(container.className);
+	
+	var classes = classList(container);
+	//alert(classes);
+	classes.add("xx4");
+	classes.remove("xx3");
+	classes.toggle("xx3");
+	
+	function classList(e) {
+		if (e.classList) return e.classList;
+		return new CSSClassList(e);
+	}
+	
+	function CSSClassList(e) {
+		this.e = e;
+	}
+	
+	CSSClassList.prototype.contains = function(c) {
+		if (c.length === 0 || c.indexOf(" ") !== -1)
+			throw new Error("Invalid class name: '" + c + "'");
+		var classes = this.e.className;
+		if (!classes) return false;
+		if (classes === c) return true;
+		return classes.search("\\b" + c + "\\b") !== -1;
+	};
+	
+	CSSClassList.prototype.add = function(c) {
+		if (this.contains(c)) return ;
+		var classes = this.e.className;
+		if (classes && classes[classes.length - 1] !== " ") c = " " + c;
+		this.e.className += c;
+	};
+	
+	CSSClassList.prototype.remove = function(c) {
+		if (!this.contains(c)) return;
+		var classes = this.e.className;
+		this.e.className = classes.replace(new RegExp("\\b" + c + "\\b\\s*", "g"), "");
+	};
+	
+	CSSClassList.prototype.toggle = function(c) {
+		if (this.contains(c)) {
+			this.remove(c);
+			return false;
+		} else {
+			this.add(c);
+			return true;
+		}
+	};
+	
+	CSSClassList.prototype.toString = function() {
+		return this.e.className;
+	};
+	
+	CSSClassList.prototype.toArray = function() {
+		return this.e.className.match(/\b\w+\b/g) || [];
+	};
+	
+	//disableStylesheet(1);
+	disableStylesheet("#ss_first, link[title=demo01_02]");
+	//alert(document.styleSheets[0].insertRule);
+	
+	var aa = document.getElementById("aa");
+	aa.scrollTop = 30;
+	var aaa = document.getElementById("aaa");
+	var box = aaa.getBoundingClientRect();
+	//alert(box.top);
+	//alert(aaa.offsetTop);
+	//alert(aaa.clientHeight);
+	
+	function disableStylesheet(ss) {
+		if (typeof ss === "number")
+			document.styleSheets[ss].disabled = true;
+		else {
+			var stylesheets = document.querySelectorAll(ss);
+			for (var i = 0; i < stylesheets.length; i++)
+				stylesheets[i].disabled = true;
+		}
+	}
+	
+	//document.addEventListener("click", function(event) {
+		//alert(event);
+	//}, false);
+	
+	//document.attachEvent("onclick", function(event) {
+	//	alert(event);
+	//});
+	
+	//document.onclick = function(event) {
+	//	alert(event);
+	//};
+	//addEvent(document, "click", function() {
+	//	alert(this);
+	//});
+	
+	//g(3);
+	
+	//var a = function a(p) {
+	//	alert(p);
+	//};
+	//a(2);
+	
+	function g(a) {
+		var a;
+		//alert(a);
+	}
+	
+	function addEvent(target, type, handler) {
+		if (target.addEventListener)
+			target.addEventListener(type, handler, false);
+		else
+			target.attachEvent("on" + type, function(event) {
+				handler.call(target, event);
+			});
+			//target.attachEvent("on" + type, handler);
+	}
+	
+	function cancelHandler(event) {
+		var event = event || window.event;
+		if (event.preventDefault) event.preventDefault();
+		if (event.returnValue) event.returnValue = false;
+		return false;
+	}
+	
+	function get(url, callback) {
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", url);
+		xhr.onreadystatechange = function() {
+			if (this.readyState === 4 && this.status === 200) {
+				if (/^text/.test(this.getResponseHeader("Content-type")))
+					callback(this.responseText);
+			}
+		};
+		xhr.send(null);
+	}
+	
+	get("http://localhost:8080/JavaWebProject01/resources/data.txt", function(msg) {
+		alert(msg);
+	});
+		
+	function encodeFormData(data) {
+		if (!data) return "";
+		var pairs = [];
+		for (var name in data) {
+			if (!data.hasOwnProperty(name)) continue;			// skip the inherited
+			if (typeof data[name] === "function") continue;		// skip the method
+			var value = data[name].toString();
+			name = encodeURIComponent(name.replace(" ", "+"));
+			value = encodeURIComponent(value.replace(" ", "+"));
+			pairs.push(name + "=" + value);
+		}
+		return pairs.join("&");
+	}
+	
+	function postData(url, data, callback) {
+		var request = new XMLHttpRequest();
+		request.open("POST", url);
+		request.onreadystatechange = function() {
+			if (this.readyState === 4 && callback)
+				callback(request);
+		};
+		request.setHeader("Content-type", "application/x-www-form-urlencoded");
+		request.send(encodeFormData(data));
+	}
+	
+	function getJSONP(url, callback) {
+		var cbnum = getJSONP.count++;
+		var cbname = "getJSONP." + cbnum;
+		
+		
+		if (url.indexOf("?") === -1)
+			url += "?";
+		else
+			url += "&";
+		url += "callback=" + cbname;
+		
+		var script = document.createElement("script");
+		script.src = url;
+		document.head.appendChild(script);
+		
+		getJSONP[cbnum] = function(response) {
+			try{
+				if (callback){
+					alert(response);
+					callback(response);
+				}
+					
+			} finally {
+				delete getJSONP[cbnum];
+				document.head.removeChild(script);
+			}
+			
+		};
+	}
+	
+	getJSONP.count = 0;
+	
+	//getJSONP("http://localhost:8080/JavaWebProject01/resources/data.json", function(data) {
+	//	alert(data.name);
+	//});
+	
+	addEvent(userid, "keypress", function(event) {
+		//alert(event.type);
+		//alert(event.data);
+		var charCode = event.keyCode || event.charCode;
+		if (charCode < 32				// except space
+			|| event.charCode == 0)		// function key in Firefox
+			return;
+		var text = String.fromCharCode(charCode);
+		var messageid = this.getAttribute("data-messageid");
+		if (messageid)
+			var messageElement = document.getElementById(messageid);
+		if (this.getAttribute("data-allowed-chars").indexOf(text) === -1){
+			if (messageElement) messageElement.style.visibility = "visible";
+			preDef(event);
+			return;
+		}
+		//alert(messageElement);
+		if (messageElement) messageElement.style.visibility = "hidden";
+	});
+	
+	function drag(elem) {
+		addEvent(elem, "mousedown", function(event) {
+			var orgX = event.clientX;
+			//alert(orgX);
+			var orgY = event.clientY;
+			addEvent(document, "mousemove", move);
+			addEvent(document, "mouseup", up);
+			
+			function move(event) {
+				elem.style.position = "absolute";
+				//alert(this.style.left);
+				//alert(this.getBoundingClientRect().left);
+				elem.style.left = (elem.getBoundingClientRect().left + document.documentElement.scrollLeft + event.clientX - orgX) + "px";
+				elem.style.top = (elem.getBoundingClientRect().top + document.documentElement.scrollTop + event.clientY - orgY) + "px";
+				orgX = event.clientX;
+				orgY = event.clientY;
+			}
+			
+			function up() {
+				//alert(this);
+				removeEvent(document, "mousemove", move);
+				removeEvent(document, "mouseup", up);
+			}
+		});
+	}
+	
+	
+	function drag2(elem) {
+		addEvent(elem, "mousedown", function(event) {
+			var scrollPos = getScrollPos();
+			var deltaX = event.clientX + scrollPos.x - elem.offsetLeft;
+			var deltaY = event.clientY + scrollPos.y - elem.offsetTop;
+			
+			addEvent(document, "mousemove", move);
+			addEvent(document, "mouseup", up);
+			
+			preBubble(event);
+			
+			preDef(event);
+			
+			function move(event) {
+				elem.style.position = "absolute";
+				var scrollPos = getScrollPos();
+				elem.style.left = (event.clientX + scrollPos.x - deltaX) + "px";
+				elem.style.top = (event.clientY + scrollPos.y - deltaY) + "px";
+			}
+			
+			function up(event) {
+				removeEvent(document, "mousemove", move);
+				removeEvent(document, "mouseup", up);
+			}
+		});
+		
+		//alert(document.getElementsByTagName("table")[0]);
+		//window.onstorage = function() {
+		//	alert(1234);
+		//};
+		//localStorage.y = 1;
+		var cookies = getCookies();
+		//alert(Object.keys(cookies).length);
+		//for (var name in cookies) {
+		//	alert(name + "=" + cookies[name]);
+		//}
+		
+		//var obj = {};
+		//alert(obj.x || null);
+		
+		var storage = new CookieStorage();
+		
+		storage.setItem("name", "Anson");
+		storage.setItem("age", 33);
+		storage.setItem("名前", "楊丞");
+		
+		//storage.removeItem("名前");
+		//alert(storage.getItem("age"));
+		//alert(storage.getItem("名前"));
+		storage.clear();
+		//alert(storage.getItem("name"));
+		
+		
+		//alert(window.applicationCache);
+		//navigator.geolocation.getCurrentPosition(function(pos) {
+		//	var latitude = pos.coords.latitude;
+		//	var longitude = pos.coords.longitude;
+		//	alert("Your position: " + latitude + ", " + longitude);
+		//});
+		
+		//alert(URLSearchParams);
+		//var stateObj = { foo: 'bar' };
+
+		//alert(window.history.pushState);
+		//history.pushState({page: 1}, 'title 1', '?page=1');
+
+		//history.pushState({page: 2}, 'title 2', '?page=2');
+
+		//history.replaceState({page: 3}, 'title 3', '?page=3');
+
+		//alert(JSON.stringify(new RegExp("\\d+")));
+		//alert(JSON.stringify(new Date()));
+	}
+	*/
+		
+	function onLoad(f) {
+		if (onLoad.loaded) setTimeout(f, 0);
+		else if (window.addEventListener) window.addEventListener("load", f, false);
+		else if (window.attachEvent) window.attachEvent("onload", f);
+	}
+	
+	onLoad.loaded = false;
+	
+	onLoad(function() {
+		onLoad.loaded = true;
+	});
+	
+	onLoad(function() {
+		
+		var iframe = document.getElementById("xxx");
+		//iframe.contentDocument.designMode = "on";
+		
+		//alert("abc  de f".replace(" ", "+"));
+		//alert(window.FormData);
+		
+		//alert((new XMLHttpRequest()).upload);
+		var userid = document.getElementById("userid");
+		//alert(userid.onkeypress);
+		//if (false) {
+		//	var a = 1;
+		//}
+		//alert(a);
+		
+		var container = document.getElementById("container");
+		
+		//drag(container);
+		
+		//alert(0 || 2);
+		
+		//addEvent(document, "keypress", function(event) {
+		//	alert(event.keyCode);
+		//	alert(event.charCode);
+		//});
+		
+		var username = document.getElementById("username");
+		
+		//addEvent(username, "input", function() {
+		//	this.value = this.value.toUpperCase();
+		//});
+		
+		forceToUpperCase(username);
+		
+		//postMessage("Hello", "*");
+		window.frames["ifr1"].postMessage("abc", "*");
+	});
+	
+	//"use strict";
+	(function() {
+		aaaa = 1;
+	}());
+	
+	//alert(aaaa);
+	
+	var whenReady = (function() {
+		var funcs = [], ready = false;
+		
+		function handler(e) {
+			if (ready) return;
+			if (e.type === "readystatechange" && document.readyState !== "complete") return;
+			
+			for (var i = 0; i < funcs.length; i++)
+				funcs[i].call(document);
+			
+			funcs = null;
+			ready = true;
+		}
+		
+		if (document.addEventListener) {
+			document.addEventListener("DOMContentLoaded", handler, false);
+			document.addEventListener("readystatechange", handler, false);
+			window.addEventListener("load", handler, false);
+		} else {
+			document.attachEvent("onreadystatechange", handler);
+			window.attachEvent("onload", handler);
+		}
+		
+		return function(f) {
+			if (ready) f.call(document);
+			else funcs.push(f);
+		};
+	}());
+	
+	whenReady(function() {
+
+	});
+	
+	function getCookies() {
+		var cookies = {};
+		
+		var all = document.cookie;
+		if (all === "") return cookies;
+		
+		var list = all.split("; ");
+		for (var i = 0; i < list.length; i++) {
+			var cookie = list[i];
+			var p = cookie.indexOf("=");
+			var name = cookie.substring(0, p);
+			var value = cookie.substring(p + 1);
+			value = decodeURIComponent(value);
+			cookies[name] = value;
+		}
+		
+		return cookies;
+	}
+	
+	function CookieStorage(maxage, path) {
+		var cookies = (function() {
+			var cookies = {};
+			var all = document.cookie;
+			if (all === "") return cookies;
+			var list = all.split("; ");
+			for (var i = 0; i < list.length; i++) {
+				var cookie = list[i];
+				var p = cookie.indexOf("=");
+				var key = cookie.substring(0, p);
+				var value = cookie.substring(p + 1);
+				value = decodeURIComponent(value);
+				cookies[key] = value;
+			}
+			return cookies;
+		}());
+		
+		var keys = Object.keys(cookies);
+		this.length = keys.length;
+				
+		this.key = function(n) {
+			//alert(this.length);
+			//if (n < 0 || n >= this.length) return null;
+			return keys[n];
+		};
+		
+		this.setItem = function(key, value) {
+			if (!(key in cookies)) {
+				keys.push(key);
+				this.length++;
+			}
+			
+			cookies[key] = value;
+			
+			var cookie = key + "=" + encodeURIComponent(value);
+			if (maxage) cookie += "; max-age=" + maxage;
+			if (path) cookie += "; path=" + path;
+			document.cookie = cookie;
+		};
+		
+		this.getItem = function(key) {
+			return cookies[key] || null;
+		};
+		
+		this.removeItem = function(key) {
+			if (!(key in cookies)) return;
+			
+			delete cookies[key];
+			
+			keys.splice(keys.indexOf(key), 1);
+			this.length--;
+			
+			document.cookie = key + "=; max-age=0";
+		};
+		
+		this.clear = function() {
+			for (var i = 0; i < this.length; i++)
+				document.cookie = keys[i] + "=; max-age=0";
+			cookies = {};
+			keys = [];
+			this.length = 0;			
+		};
+	}
+	
+	function forceToUpperCase(element) {
+		if (typeof element === "string") element = document.getElementById(element);
+		
+		
+		addEvent(element, "input", function() {
+			this.value = this.value.toUpperCase();
+		});
+		
+		element.onpropertychange = upcaseOnPropertyChange;	// IE
+		
+		function upcaseOnPropertyChange() {
+			if (window.event.propertyName === "value") {
+				this.onpropertychange = null;
+				this.value = this.value.toUpperCase();
+				this.onpropertychange = upcaseOnPropertyChange;
+			}
+		}
+	}
+	
+	function getScrollPos(w) {
+		w = w || window;
+
+		// This works for all browsers except IE versions 8 and before
+		if (w.pageXOffset != null) return {x: w.pageXOffset, y:w.pageYOffset};
+
+		// For IE (or any browser) in Standards mode
+		var d = w.document;
+		if (document.compatMode == "CSS1Compat")
+			return {x:d.documentElement.scrollLeft, y:d.documentElement.scrollTop};
+
+		// For browsers in Quirks mode
+		return { x: d.body.scrollLeft, y: d.body.scrollTop };
+	}
+	
+	function preBubble(event) {
+		if (event.stopPropagation)
+			event.stopPropagation();
+		else
+			event.cancelBubble = true;
+	}
+	
+	function preDef(event) {
+		if (event.preventDefault)
+			event.preventDefault();
+		else
+			event.returnValue = false;
+	}
+	
+	function addEvent(target, type, handler) {
+		if (target.addEventListener) {
+			target.addEventListener(type, handler, false);
+		} else {
+			target.attachEvent("on" + type, function(event) {
+				handler.call(target, event);
+			});
+		}
+	}
+	
+	function removeEvent(target, type, handler) {
+		if (target.removeEventListener)
+			target.removeEventListener(type, handler, false);
+		else
+			target.detachEvent("on" + type, handler);
+	}
+	
+	//window.onmessage = function(event) {
+	//	window.frames["ifr1"].postMessage("abc", "*");
+	//}
+</script>
+<!--
+<script src="file1.js"></script>
+<script src="file2.js"></script>
+<script src="file3.js"></script>
+<script src="TOC.js"></script>
+
+<style type="text/css">
+	#TOC {
+		border : solid black 1px;
+		margin : 10px;
+		padding : 10px;
+	}
+	.TOCEntry {
+		font-family : sans-serif;
+	}
+	.TOCEntry a {
+		text-decoration : none;
+	}
+	.TOCLevel1 {
+		font-size : 16pt;
+		font-weight : bold;
+	}
+	.TOCLevel2 {
+		font-size : 12pt;
+		margin-left : .5in;
+	}
+	.TOCSectNum:after {
+		content : ": ";
+	}
+</style>
+-->
+
+<style type="text/css">
+	.xx3 {
+		font-size : 30px;
+	}
+	.xx4 {
+		color : green;
+	}
+</style>
+
+<body>
+	
+	&lt;span&gt;abcd&lt;/span&gt;
+	<a href="javascript:void window.open('about:blank');">Open New Window</a><br/>
+	<a href="javascript:void '5';">Another Link</a><br/>
+	<a href='javascript:
+			var e = "", r = "";
+			do {
+				e = prompt("Expression: " + e + "\n" + r + "\n", e);
+				try {
+					r = "Result: " + eval(e);
+				} catch(ex) {
+					r = ex;
+				}
+			} while(e);
+			void 4645;
+			'>
+		JavaScript Evaluator
+	</a><br/>
+	<a href="javascript:
+			var q;
+			if (window.getSelection)
+				q = window.getSelection().toString();
+			else if (document.selection)
+				q = document.selection.createRange().text;
+			void window.open('http://res.d.hjfile.cn/w/' + q);">
+		Look Up Selected Text In Wikipedia
+	</a>
+	<a href="http://www.baidu.com" target="ifr">Baidu</a>
+	<form name="box" method="post">
+		<!--
+		<input id="userid1" type="text" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" data-allowed-chars="0123456789" data-messageid="zipwarn"/>-->
+		userid: <input id="userid" type="text" data-allowed-chars="0123456789" data-messageid="zipwarn"/>
+		<span id="zipwarn" style="visibility:hidden;color:red;">Please input digital</span><br/>
+		username: <input id="username" type="text"/>
+		<input type="button" value="剪切" onclick="document.execCommand('Cut');" />
+		<input type="button" value="拷贝" onclick="document.execCommand('Copy');" />
+		<input type="button" value="保存" onclick="document.execCommand('SaveAs');" />
+		<fieldset>
+			<legend>Shopping Method</legend>
+			<label>
+				<input type="radio" name="method" value="1"/>First-class
+				<input type="radio" name="method" value="2"/>2-day Air
+				<input type="radio" name="method" value="3"/>Overnight
+			<label>
+		</fieldset>
+	</form>
+	<span id="box">abcd<em>xxx</em>ddd<p></p>fffffff</span>
+	adsfasdfsd
+	<button onclick="window.open();">click</button>
+	
+	<iframe name="ifr1" src="ifr1.html"></iframe>
+	<iframe id="xxx" name="ifr2" src="ifr2.html"></iframe>
+	<!--
+	<iframe name="twitter" src="TwitterSearch.html"></iframe>-->
+	xxxxxxx<br/>
+	
+	
+	<div id="container" style="border:1px black solid;height:300px;width:300px;background:#eee;">
+		<!--abc-->
+		<div id="aa" style="width:200px;height:200px;background:#ccc;border:5px solid black;position:relative;overflow:scroll;">
+			<div id="aaa" style="margin:10px;width:100px;height:250px;background:#aaa;border:5px solid black;"></div>
+		</div>
+	</div>
+	
+	<!--
+	<div id="editor" contenteditable class="xx1 xx2 xx3">
+		Click to edit
+	</div>
+	
+	<table border=1 width="100">
+		<tr><th>name</th><th>job</th></tr>
+		<tr><td>Tina</td><td>electrician</td></tr>
+		<tr><td>Anson</td><td>architect</td></tr>
+		<tr><td>Jack</td><td>scientist</td></tr>
+	</table>
+	-->
+	<!--
+	<h5>
+		title5
+		<h1>
+			title1
+			<h3>
+				title3
+				<h4>title4</h4>
+			</h3>
+		</h1>
+		<h2>
+			title2
+			<h6>title6</h6>
+		</h2>
+	</h5>
+	-->
+	<!--
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	-->
+</body>
+<script>
+	(function(window, undefined) {
+		jQuery = function(selector, context) {
+			return new jQuery.fn.init(selector, context);
+		}
+		jQuery.fn = jQuery.prototype = {
+			init : function(selector, context) {
+				this.dom = document.querySelector(selector)
+			},
+			val : function(content) {
+				//console.log(this);
+				if (content) {
+					this.dom.value = content;
+				} else {
+					return this.dom.value;
+				}
+			}
+		}
+		jQuery.fn.init.prototype = jQuery.fn;
+		window.$ = jQuery;
+	})(window);
+	$("input").val("value");
+</script>
+</html>

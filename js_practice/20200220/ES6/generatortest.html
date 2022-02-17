@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+	/*
+	function* gen() {
+		console.log("aaaa");
+		yield "abc";
+		return "def";
+		yield "124";
+	} 
+	
+	let g = gen();
+	console.log(g.next());
+	//console.log(g.next());
+	//console.log(g.next());
+	
+	
+	function* demo() {
+		console.log('Hello' + (yield) + "a"); // OK
+		console.log('Hello' + (yield 123) + "b"); // OK
+	}
+	
+	let d = demo();
+	d.next();
+	console.log(d.next());
+	d.next();
+	
+	//d.next();
+	*/
+	function* gen(x,y){
+		
+		let z, result;
+		/*
+		yield z = x+y;
+		yield result = z*x;
+		*/
+		z = yield x + y;
+		result = yield z * x;
+		//return result;
+   }
+   var g = gen(5,6);
+   let result1 = g.next();//{value: 11, done: false}
+   //console.log(i);
+   console.log(g.next(result1.value));//{value: 55, done: false}
+	
+	
+	function* chef() {
+		console.log("炒鸡");
+		yield "worker";
+		console.log("上料");
+		yield "worker";
+	}
+	
+	function* worker() {
+		console.log("准备工作");
+		yield "chef";
+		console.log("炖鸡");
+		yield "chef";
+		console.log("上菜");
+	}
+	
+	let ch = chef();
+	let wo = worker();
+	
+	function run(role) {
+		let pos = role.next();
+		if (pos.value === "chef") {
+			run(ch);
+		} else if (pos.value === "worker") {
+			run(wo);
+		}
+	}
+	
+	run(wo);
+	
+	
+	function prepare(success) {
+		setTimeout(() => {
+			console.log("prepare");
+			success();
+		});
+	}
+	
+	function fire(success) {
+		setTimeout(() => {
+			console.log("fire");
+			success();
+		});
+	}
+	
+	function stew(success) {
+		setTimeout(() => {
+			console.log("stew");
+			success();
+		});
+	}
+	
+	function feed(success) {
+		setTimeout(() => {
+			console.log("feed");
+			success();
+		});
+	}
+	
+	function serve(success) {
+		setTimeout(() => {
+			console.log("serve");
+			success();
+		});
+	}
+	
+	function* task() {
+		yield prepare;
+		yield fire;
+		yield stew;
+		yield feed;
+		yield serve;
+	}
+	
+	function cook(generator) {
+		const gen = generator();
+		function next() {
+			let progress = gen.next();
+			if (progress.done) return;
+			progress.value(next);
+		}
+		next();
+	}
+	
+	cook(task);
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+	//alert([][Symbol.iterator]);
+	var func = Symbol();
+	var obj = {
+		[func]: function() {
+			console.log("YES");
+		},
+		func : function() {
+			console.log("NO");
+		}
+	};
+	obj[func](); // 输出：YES
+	obj.func();  // 输出：NO
+	
+	let status = function* () {
+		while (1) {
+			yield "A";
+			yield "B";
+			yield "C";
+		}
+	}
+	
+	let state = status();
+	console.log(state.next());
+	console.log(state.next());
+	console.log(state.next());
+	console.log(state.next());
+	console.log(state.next());
+</script>
+</head>
+<body>
+</body>
+</html>

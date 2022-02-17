@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="MyPromise.js"></script>
+<script type="text/javascript">
+	/*
+	let p = new MyPromise(function(resolve, reject) {
+		setTimeout(function() {
+			resolve("dafs");
+		});
+		reject(noData);
+	});
+	
+	p.then(function(data) {
+		console.log(data);
+	}, function(reason) {
+		console.log(reason);
+	}).then(() => new MyPromise((resolve, reject) => {
+		resolve("abcde");
+	})).then(data => {
+		console.log(data);
+		return new MyPromise((resolve, reject) => {
+			resolve(new MyPromise((resolve, reject) => {
+				resolve("ddd");
+				reject("reject");
+			}));
+		});
+	}).finally(() => {
+		setTimeout(() => {
+			console.log("finally");
+		}, 100);
+	}).then(data => {
+		console.log(data);
+	}, reason => {
+		console.log("111" + reason);
+	});
+	
+	
+	Promise.race([new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve("abc");
+		}, 150);
+	}), new Promise((resolve, reject) => {
+		setTimeout(() => {
+			//resolve("gh456");
+			reject("error!");
+		}, 200);
+	}), new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve("asfdsd");
+		}, 300);
+	})]).then(data => {
+		console.log(data);
+	}, reason => {
+		console.log(reason);
+	});
+	
+	let p = new MyPromise((resolve, reject) => {
+		resolve("ab");
+	}).then(data => {
+		console.log(data);
+	});
+	
+	
+	let arr = [];
+	arr.length = 3;
+	alert(arr.length);
+	
+	
+	let p1 = new MyPromise((resolve, reject) => {
+		setTimeout(() => reject(new Error("fail")), 3000);
+	});
+	let p2 = new MyPromise((resolve, reject) => {
+		setTimeout(() => resolve(p1), 1000);
+	});
+	
+	p2.then(result => console.log(result))
+	  .catch(error => console.log(error));
+	  
+	new MyPromise((resolve, reject) => {
+		return resolve(1);
+		console.log(2);
+	}).then(r => {
+		console.log(r);
+	});
+	
+	new MyPromise((resolve, reject) => {
+		//resolve("xxx");
+		setTimeout(resolve, 100, "OK");
+	}).then(() => {
+		return new MyPromise((resolve, reject) => {
+			//resolve("Hello");
+			//reject("Error");
+			setTimeout(resolve, 500, "Hello");
+			console.log("haha");
+		});
+	}).then(value => {
+		console.log(value);
+	}, reason => {
+		console.log(reason);
+	});
+	
+	let promise = new MyPromise((resolve, reject) => {
+		throw new Error("test");
+	});
+	promise.catch(error => {
+		console.log(error);
+	});
+	
+	let promise = new MyPromise((resolve, reject) => {
+		resolve("OK");
+		throw new Error("test");
+	});
+	promise.then(value => {
+		console.log(value);
+	}).catch(error => {
+		console.log(error);
+	});
+	
+	new MyPromise((resolve, reject) => {
+		resolve("OK");
+	}).then(value => {
+		throw new Error("error");
+	}).then(value => {
+		
+	}).catch(error => {
+		console.log(error);
+	});
+	
+	let p = new MyPromise((resolve, reject) => {
+		resolve("OK");
+	});
+	p.then(value => {
+		console.log(value);
+		return "Hello";
+	}).then(value => {
+		console.log(value);
+	});
+	
+	let someAsyncThing = () => new MyPromise((resolve, reject) => {
+		resolve(x + 2);
+	});
+	someAsyncThing().catch(error => {
+		console.log("oh no, " + error);
+	}).then(() => {
+		console.log("carry on");
+	}); 
+	
+	MyPromise.resolve().catch(error => {
+		console.log("oh no, ", error);
+	}).then(() => {
+		console.log("carry on");
+	});
+	
+	let someAsyncThing = () => new MyPromise((resolve, reject) => {
+		resolve(x + 2);
+	});
+	someAsyncThing().then(() => someOtherAsyncThing()).catch(error => {
+		console.log("oh no, " + error);
+		y + 2;
+	}).then(() => {
+		console.log("carry on");
+	});
+	
+	let someAsyncThing = () => new MyPromise((resolve, reject) => {
+		resolve(x + 2);
+	});
+	someAsyncThing().then(() => someOtherAsyncThing()).catch(error => {
+		console.log("oh no, " + error);
+		y + 2;
+	}).catch((error) => {
+		console.log("carry on " + error);
+	});
+	
+	const p1 = new MyPromise((resolve, reject) => {
+		resolve("hello");
+	}).then(result => result).catch(e => e);
+	const p2 = new MyPromise((resolve, reject) => {
+		throw new Error("error");
+	}).then(result => result).catch(e => {throw e});
+	
+	MyPromise.all([p1, p2]).then(result => {
+		console.log("everything is OK : " + result);
+	}).catch(e => {
+		console.log("Error : " + e);
+	});
+	*/
+	
+	
+	/*	Uncaught (in promise) ReferenceError: x is not defined
+	let someAsyncThing = () => new Promise((resolve, reject) => {
+		resolve(x + 2);
+	});
+	someAsyncThing().then(() => {
+		console.log("everything is OK");
+	});
+	*/
+	
+	/*	event circle???	microtask???
+	let promise = new MyPromise((resolve, reject) => {
+		resolve("OK");
+		setTimeout(() => {
+			throw new Error("test");
+		}, 0);
+	});
+	promise.then(value => {
+		console.log(value);
+	});
+	
+	setTimeout(() => {
+		console.log("three");
+	}, 0);
+	
+	MyPromise.resolve().then(() => {
+		console.log("two");
+	});
+	
+	console.log("one");
+	*/
+	
+	let p = MyPromise.reject("error");
+	p.then(undefined, s => {
+		console.log(s);
+	});
+	
+	const thenable = {
+		then(resolve, reject) {
+			reject("Error");
+		}
+	};
+	
+	MyPromise.reject(thenable).catch(e => {
+		console.log(e === thenable);
+	});
+	
+	let p1 = new MyPromise((resolve, reject) => {
+		resolve(12);
+	});
+	let p2 = p1.then(value => console.log(value));
+	console.log(p1._status);
+	console.log(p2._status);
+	
+</script>
+</head>
+<body>
+</body>
+</html>

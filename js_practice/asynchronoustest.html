@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<script>
+	window.addEventListener("load", function() {
+		let btn1 = document.getElementById("btn1");
+		btn1.addEventListener("click", function() {
+			let result = 0.0;
+			for (let i = 1; i < 1000000000; i++) {
+				result += (Math.PI + Math.E) / i;
+			}
+			document.getElementById("result").innerHTML = result;
+		});
+		
+		let btn2 = document.getElementById("btn2");
+		btn2.addEventListener("click", function() {
+			alert(123);
+		});
+	});
+</script>
+<body>
+	<input type="button" value="btn1" id="btn1"/>
+	<input type="button" value="btn2" id="btn2"/><br />
+	<span id="result"></span>
+</body>
+</html>

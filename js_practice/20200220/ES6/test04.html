@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+	function F() {}
+	/*
+	console.log(F.constructor.prototype === F.__proto__);
+	
+	var o = Object.create(Object.prototype);
+	o.constructor = F;
+	F.prototype = o;
+	
+	var f = new F();
+	f.constructor;
+	*/
+	
+	function* gen() {}
+	let proto = Object.getPrototypeOf(gen);
+	console.log(proto);
+	console.log(typeof proto);
+	console.log(Object.getPrototypeOf(gen) === Object.getPrototypeOf(gen).constructor.prototype);
+	console.log(Object.getPrototypeOf(F) === Object.getPrototypeOf(F).constructor.prototype);
+	
+	console.log(typeof Object.getPrototypeOf(proto));
+	console.log(Object.getPrototypeOf(proto));
+	console.log(typeof Function.prototype);
+	console.log(typeof Function);
+	console.log(Object.getPrototypeOf(proto) === Function.prototype);
+	console.log(Object.getPrototypeOf(proto).constructor === Function);
+	
+	console.log(Object.getPrototypeOf(gen.prototype));
+	
+	console.log("--------------------");
+	console.log(Object.getPrototypeOf(gen.prototype).constructor);
+	console.log(Object.getPrototypeOf(Object.getPrototypeOf(gen.prototype)));
+	console.log(Object.getPrototypeOf(Object.getPrototypeOf(gen.prototype)).constructor);
+	console.log(Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(gen.prototype))));
+	console.log(Object.getPrototypeOf(gen.prototype).constructor === Object.getPrototypeOf(Object.getPrototypeOf(gen.prototype)).constructor);
+	console.log("--------------------");
+	
+	let f = new F();
+	console.log(typeof Object.getPrototypeOf(F));
+	console.log(Function.constructor);
+	console.log(Object.getPrototypeOf(F).constructor);
+	console.log(f.constructor === Object.getPrototypeOf(f).constructor);
+	console.log(Object.getPrototypeOf(gen.prototype) === Object.getPrototypeOf(gen).prototype);
+	console.log("--------------------");
+	console.log(Object.getPrototypeOf(F) === Function.prototype);
+	
+	let someFunc = Object.create(Function.prototype);
+	console.log(typeof someFunc);
+	
+	Function.prototype.a = 1;
+	
+	for (let key in F) {
+		console.log(key);
+	}
+	
+	console.log(gen.constructor === Object.getPrototypeOf(gen).constructor);
+	console.log(gen().constructor.constructor);
+	console.log(gen().constructor.prototype.constructor);
+	console.log(typeof gen.constructor);
+	console.log(typeof gen().constructor);
+	
+	let o = {
+		a : "Aa",
+		b : new Promise(resolve => {
+			setTimeout(resolve, 100, "hello");
+		})
+	};
+	
+	console.log(new o.constructor());
+	
+	let p = new Promise((resolve, reject) => {
+		resolve("OK");
+	});
+	
+	p.then(2).then(value => console.log(value));
+	
+	alert(undefined instanceof Object);
+	Promise.resolve().then(value => console.log(value));
+</script>
+</head>
+<body>
+</body>
+</html>

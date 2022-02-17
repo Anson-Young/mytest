@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+	/*
+	function* gen() {
+		yield 1;
+	}
+	
+	//console.log(gen.prototype);
+	//console.log(gen().constructor);
+	console.log(Object.getPrototypeOf(gen).prototype);
+	console.log(gen().constructor === Object.getPrototypeOf(gen).prototype.constructor);
+	
+	function Run() {
+		
+	}
+	
+	Run.prototype = gen.prototype;
+	
+	let run = new Run();
+	//console.log(run.constructor);
+	//console.log(run.next);
+	
+	//alert(isGenerator(new Run()));
+	//alert((new Run()).next());
+	
+	function* generator1() {
+		let a = 1 + 2;
+	}
+	
+	let g1 = generator1();
+	//console.log(g1.next());
+	
+	
+	function isGenerator(obj) {
+		return 'function' == typeof obj.next && 'function' == typeof obj.throw;
+	};
+
+	
+	function isGeneratorFunction(obj) {
+		var constructor = obj.constructor;    // generator函数的constructor就是GeneratorFunction函数(constructor: GeneratorFunction函数)
+		if (!constructor) return false;    // 如果假值, 则直接return
+		if ('GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName) return true;   // constructor函数的name属性为GeneratorFunction或者displayName属性为'GeneratorFunction' 则obj就是Generator函数
+		return isGenerator(constructor.prototype);    // 检查constructor.prototype是否是遍历器对象
+	};
+	
+	//alert(Object.getPrototypeOf(function() {}) === Function.prototype);
+	*/
+	
+	function spawn(gen) {
+		return new Promise((resolve, reject) => {
+			let g = gen();
+			
+			function step(nextF) {
+				let ret;
+				try {
+					ret = nextF();
+				} catch(e) {
+					reject(e);
+				}
+				if (ret.done) return resolve(ret.value);
+				//Promise.resolve(ret.value).then(function(value) {
+				//	step(function() {
+				//		return g.next(value);
+				//	});
+				//});
+				
+				Promise.resolve(ret.value).then(value => step(() => g.next(value))).catch(error => step(() => g.throw(error)));
+								
+				//Promise.resolve(ret.value).then(value => () => step(() => g.next(value))).catch(error => () => step(() => g.throw(error)));
+				
+			}	
+			
+			step(() => g.next());
+			
+			/*
+			onFulfilled();
+			function onFulfilled(res) {
+				let ret;
+				try {
+					ret = g.next(res);
+				} catch(e) {
+					reject(e);
+				}
+				next(ret);
+			}
+			
+			function next(ret) {
+				if (ret.done) return resolve(ret.value);
+				ret.value.then(onFulfilled, error => {
+					let ret;
+					try {
+						ret = g.throw(error);
+					} catch(e) {
+						reject(e);
+					}
+				});
+			}
+			*/
+		});	
+	}
+	
+	function f(a, b, cb) {
+		cb(null, a + b, a * b);
+		cb(null, a + b, a * b);
+	}
+	
+	let trunkify = fn => (...args) => callback => {
+		let called;
+		return fn.call(this, ...args, (...cbArgs) => {
+			if (called) return;
+			called = true;
+			return callback.call(this, ...cbArgs);
+		});
+	};
+	
+	let trunk = trunkify(f);
+	//trunk(3, 5)(console.log.bind(console));
+	
+	async function gen() {
+		
+		let x = await {
+			a : "Aa",
+			b : new Promise((resolve, reject) => {
+				setTimeout(resolve, 100, "hello");
+				//setTimeout(reject, 100, "Error");
+				//reject("Error2");
+			})
+		};
+		
+		let z = await function(a) {a(null, 4)};
+		let y = await trunk(z, 5);
+		let ret = await [
+			new Promise((resolve, reject) => {
+				//setTimeout(reject, 50, "error");
+				setTimeout(resolve, 30, z);
+			}),
+			new Promise((resolve, reject) => {
+				//setTimeout(reject, 50, "error");
+				setTimeout(resolve, 35, x.b);
+			}),
+			new Promise((resolve, reject) => {
+				setTimeout(resolve, 40, y);
+			})
+		];
+		return ret;
+	}
+	
+	function* gen2() {
+		let x = yield {
+			a : "Aa",
+			b : new Promise((resolve, reject) => {
+				setTimeout(resolve, 100, "hello");
+				//setTimeout(reject, 100, "Error");
+				//reject("Error2");
+			})
+		};
+		
+		let z = yield function(a) {a(null, 4)};
+		let y = yield trunk(z, 5);
+		let ret = yield [
+			new Promise((resolve, reject) => {
+				//setTimeout(reject, 50, "error");
+				setTimeout(resolve, 30, z);
+			}),
+			new Promise((resolve, reject) => {
+				//setTimeout(reject, 50, "error");
+				setTimeout(resolve, 35, x.b);
+			}),
+			new Promise((resolve, reject) => {
+				setTimeout(resolve, 40, y);
+			})
+		];
+		return ret;
+	}
+	
+	let promise = spawn2(gen2);
+	promise.then(value => console.log(`success: ${value}`)).catch(err => console.log("failed: " + err));
+	
+	function spawn2(gen) {	
+		return new Promise((resolve, reject) => {
+			let g = gen();
+			
+			function step(nextF) {
+				try {
+					let ret = nextF();
+				} catch(e) {
+					reject(e);
+				}
+				if (ret.done) return resolve(ret.value);
+				Promise.resolve(ret.value).then(value => step(() => g.next(value))).catch(error => step(() => g.throw(error)));
+			}
+			
+			step(() => g.next());
+		});
+	}
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style type="text/css">
+	h1, h2 {
+		color : blue;
+		font-style : italic;
+	}
+	
+	.WARNING {
+		font-weight : bold;
+		font-size : 150%;
+		margin : 0 1in 0 1in;
+		background-color : yellow;
+		border : solid red 8px;
+		padding : 10px;
+	}
+	
+	.WARNING h1, .WARNING h2 {
+		text-align : center;
+		/*margin : 0;*/
+	}
+	
+	#special {
+		text-align : center;
+		text-transform : uppercase;
+	}
+	
+	h3::after {
+        content: "rocks!";
+    }
+</style>
+</head>
+<script src="js/jquery-1.11.1.min.js"></script>
+
+<body>
+	<!--
+	<form id="productRegistForm" method="post" action="http://www.baidu.com">
+		<input name="userid"/>
+		<input id="sub" type="submit" value="submit" <!--onclick="f();"/>
+		<input id="sub" type="button" value="submit"/>
+	</form>
+	-->
+	<h3>generated content</h3>
+	<h1>Cascading Style Sheets Demo</h1>
+	
+	<div class="WARNING">
+		<h2>Warning</h2>
+		This is a warning!
+		Notice how it grabs your attention with its bold text and bright colors.
+		Also notice that the heading is centered and in blue italics.
+	</div>
+	
+	<p id="special">
+		This paragraph is centered<br/>
+		and appears in uppercase letters.<br/>
+		<span style="text-transform : none;">
+			Here we explicitly use an inline style to override the uppercase letters.
+		</span>
+	</p>
+	
+	<span style="position:relative;">
+		Shadow
+		<span style="position:absolute;top:3px;left:3px;z-index:-1;color:#888;">Shadow</span>
+	</span>
+	<br />
+	<span style="text-shadow:3px 3px 1px #888;">Shadow</span>
+	<div style="width:200px;">
+		<div style="box-sizing:border-box;width:50%;padding:10px;border:solid black 2px;"></div>
+	</div>
+	
+	<div style="position:relative;width:200px;height:200px;background:#234;border:1px solid black;">
+		<div style="width:150px;height:150px;background:#555;position:absolute;top:10px;left:10px;border:1px solid black;clip:rect(auto 100px auto auto);">
+			
+		</div>
+	</div>
+	
+	<div id="box" style="margin:10px;border:solid 1px black;"></div>
+</body>
+
+<!--
+<script>
+	
+	var btn = document.getElementById('sub');
+	//alert(btn.addEventListener);
+	btn.addEventListener('click', function(e) {
+		  e.preventDefault();
+		  //regist();
+		  alert(13);
+		}, false);
+	
+	
+	$(document).on('click', '#subx', function(e) {
+		//alert(e.preventDefault);
+		e.preventDefault();
+		alert(123);
+		//regist();
+	});
+	
+	function regist() {
+		document.getElementById('productRegistForm').action = "http://www.baidu.com";
+		document.getElementById('productRegistForm').submit();
+		return;
+	}
+</script>
+-->
+<script>
+	//alert(box.style.margin);
+	//alert(box.style.border);
+	//alert(box.getAttribute("style"));
+	let h3 = document.querySelector('h3'), 
+    result = getComputedStyle(h3, '::after').content;
+    alert(`the generated content is: ${result}`);
+    console.log(`the generated content is: ${result}`); 
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+	#div1{
+		background : #ccc;
+		width : 200px;
+		height : 200px;
+	}
+	#div2{
+		background : #bbb;
+		width : 100px;
+		height : 100px;
+	}
+	#div3{
+		background : #aaa;
+		width : 50px;
+		height : 50px;
+	}
+</style>
+</head>
+<script>
+	window.onload = function() {
+		var oDiv1 = document.getElementById("div1");
+		var oDiv2 = document.getElementById("div2");
+		var oDiv3 = document.getElementById("div3");
+		oDiv1.addEventListener("click", fn, false);
+		oDiv2.addEventListener("click", fn, false);
+		oDiv3.addEventListener("click", fn, false);	
+	};
+	
+	function fn() {
+		alert(this.id);
+	}
+</script>
+<body>
+	<div id="div1">
+		<div id="div2">
+			<div id="div3"></div>
+		</div>
+	</div>
+</body>
+</html>

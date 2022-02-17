@@ -1,0 +1,50 @@
+function* generatorFunction(){
+	yield 1;
+	return 2;
+}
+// 获取 Generator函数 的原型对象
+// GeneratorFunction {prototype: Generator, constructor: ƒ, Symbol(Symbol.toStringTag): "GeneratorFunction"}
+var prototype = Object.getPrototypeOf(generatorFunction);
+// 获取 Generator函数 的 构造函数对象
+// ƒ GeneratorFunction() { [native code] }
+var constructor = Object.getPrototypeOf(generatorFunction).constructor; 
+
+// Generator函数 的构造函数对象上的prototype属性 === Generator函数 的原型对象
+constructor.prototype === prototype; // true
+
+
+
+Reflect.ownKeys(generatorFunction); // ["length", "name", "prototype"]
+
+// Generator {constructor: GeneratorFunction, next: ƒ, return: ƒ, throw: ƒ, Symbol(Symbol.toStringTag): "Generator"}
+Object.getPrototypeOf(generatorFunction).prototype; 
+generatorFunction.prototype === Object.getPrototypeOf(generatorFunction).prototype; // false
+
+Object.getPrototypeOf(generatorFunction.prototype) === Object.getPrototypeOf(generatorFunction).prototype; // true
+
+
+
+// 获取 GeneratorFunction类 的原型对象
+var generatorFunctionPrototype = Object.getPrototypeOf(function*(){});
+
+// generatorFunctionPrototype 的 prototype 属性的值是一个对象，下面是谷歌浏览器控制台上的显示
+// Generator {constructor: GeneratorFunction, next: ƒ, return: ƒ, throw: ƒ, Symbol(Symbol.toStringTag): "Generator"}
+generatorFunctionPrototype.prototype;
+
+// generatorFunctionPrototype 的 prototype 属性值的 constructor 属性的值等于 generatorFunctionPrototype
+generatorFunctionPrototype.prototype.constructor === generatorFunctionPrototype; // true
+
+// 而且 generatorFunctionPrototype 对象其实是与普通函数平级的，有着同一个原型对象
+// 所以我们可以将 generatorFunctionPrototype 对象当作一个特殊类的特殊构造函数对象。 
+Object.getPrototypeOf(generatorFunctionPrototype) === Object.getPrototypeOf(function(){}); // true
+
+
+function* generatorFunction(){}
+// Generator函数 的原型对象是 generatorFunctionPrototype
+Object.getPrototypeOf(generatorFunction) === generatorFunctionPrototype;
+// Generator函数 的 prototype 属性的值的原型对象是 generatorFunctionPrototype 的 prototype 属性的值
+Object.getPrototypeOf(generatorFunction.prototype) === generatorFunctionPrototype.prototype;
+
+
+generatorFunction.prototype.constructor === generatorFunction; // false
+generatorFunction.prototype.constructor === generatorConstructor // true

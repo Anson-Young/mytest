@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+	async function gen() {
+		return await new Promise((resolve, reject) => {
+			resolve("OK");
+		});
+		//return 1;
+	}
+	
+	let g = gen();
+	g.then(value => {
+		console.log(value);
+	});
+	
+	@testable
+	class MyTestableClass {
+		
+	}
+	
+	function testable(target) {
+		target.isTestable = true;
+	}
+</script>
+</head>
+<body>
+</body>
+</html>

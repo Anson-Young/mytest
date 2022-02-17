@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html manifest="myapp.appcache">
+<head>
+<script src="base.js"></script>
+<script>
+	window.onload = function() {
+		//alert($("div").find("#d").find("strong"));
+		//$("div").find(".b").css("color", "red");
+	};
+	
+	// console.log("/banner/en/home".replace("en", "ko"))
+	// console.log(/\/banner\/(\w+)\/home/.test("/banner/en/home"))
+	// console.log("/banner/en/home".match(/\/banner\/(\w+)\/home/))
+	// console.log(/\/banner\/(\w+)\/home/g.exec("/banner/en/home"))
+	console.log([1, 2, 3].filter(i => i % 2 === 0))
+</script>
+</head>
+<body>
+	<div>
+		<p id="a">p</p>
+		<span class="b">span</span>
+		<span class="b">span</span>
+		<span>span</span>
+	</div>
+	<div id="statusline"></div>
+</body>
+<script src="appcacheevents.js"></script>
+</html>

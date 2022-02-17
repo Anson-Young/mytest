@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+
+(function (window) {
+	const PENDING = "PENDING";
+	const FULFILLED = "FULFILLED";
+	const REJECTED = "REJECTED";
+	class MyPromise {
+		constructor(executor) {
+			this.status = PENDING;
+			this.onFulfilled = [];
+			this.onRejected = [];
+			
+			let resolve = value => {
+				if (this.status === PENDING) {
+					this.status = FULFILLED;
+					this.value = value;
+					this.onFulfilled.forEach(fn => fn());
+				}
+			};
+			
+			let reject = reason => {
+				if (this.status === PENDING) {
+					this.status = REJECTED;
+					this.reason = reason;
+					this.onRejected.forEach(fn => fn());
+				}
+			};
+			
+			try {
+				executor(resolve, reject);
+			} catch(e) {
+				reject(e);
+			}
+		}
+		
+		then(onFulfilled, onRejected) {
+			onFulfilled = typeof onFulfilled === "function" ? onFulfilled : value => value;
+			onRejected = typeof onRejected === "function" ? onRejected : reason => {throw reason;};
+			
+			//let self = this;
+			
+			let promise2 = new MyPromise((resolve, reject) => {
+				switch(this.status) {
+					case PENDING : {
+						this.onFulfilled.push(() => {
+							setTimeout(() => {
+								try {
+									let x = onFulfilled(this.value);
+									resolvePromise(promise2, x, resolve, reject);
+								} catch(e) {
+									reject(e);
+								}
+							});
+						});
+						this.onRejected.push(() => {
+							setTimeout(() => {
+								try {
+									let x = onRejected(this.reason);
+									resolvePromise(promise2, x, resolve, reject);
+								} catch(e) {
+									reject(e);
+								}
+							});
+						});
+						break;
+					}
+					case FULFILLED : {
+						setTimeout(() => {
+							try {
+								//console.log(this === self);
+								let x = onFulfilled(this.value);
+								resolvePromise(promise2, x, resolve, reject);
+							} catch(e) {
+								reject(e);
+							}
+						});
+						break;
+					}
+					case REJECTED : {
+						setTimeout(() => {
+							try {
+								let x = onRejected(this.reason);
+								resolvePromise(promise2, x, resolve, reject);
+							} catch(e) {
+								reject(e);
+							}
+						});
+						break;
+					}
+				}
+			});
+			
+			return promise2;
+		}
+		
+		catch(onRejected) {
+			return this.then(null, onRejected);
+		}
+		
+		finally(callback) {
+			return this.then(value => {
+				return MyPromise.resolvePromise(callback()).then(() => value);
+			}, reason => {
+				//resolvePromise must execute resolve, so use "then" in link invocation, not catch!
+				return MyPromise.resolvePromise(callback()).then(() => {throw reason;});
+			});
+		}
+		
+		static resolvePromise(param) {
+			if (param instanceof MyPromise) return param;
+			
+			return new MyPromise((resolve, reject) => {
+				if (param && param.then && typeof param.then === "function") {
+					param.then(resolve);	// param = {then : function(resolve, reject) {resolve(xxx);}}
+				} else {
+					resolve(param);
+				}
+			});
+		}
+		
+		static all(promises) {
+			return new MyPromise((resolve, reject) => {
+				let results = [];
+				if (promises.length === 0) {
+					resolve(results);
+					return;
+				}
+				
+				promises.forEach(promise => {
+					MyPromise.resolve(promise).then(data => {
+						results[results.length++] = data;
+						if (results.length === promises.length) resolve(results);
+					}, reason => {
+						reject(reason);
+					});
+				});
+			});
+		}
+		
+		static race(promises) {
+			return new MyPromise((resolve, reject) => {
+				promises.forEach(promise => {
+					MyPromise.resolvePromise(promise).then(data => {
+						resolve(data);
+					}, reason => {
+						reject(reason);
+					});
+				});
+			});
+		}
+	}
+	
+	function resolvePromise(promise, x, resolve, reject) {
+		if (promise === x) {
+			throw Error("promise circle!");
+		}
+		
+		if (x && typeof x === "object" || typeof x === "function") {
+			//let used;
+			try {
+				let then = x.then;
+				if (typeof then === "function") {
+					then.call(x, y => {
+						//if (used) return;
+						//used = true;
+						resolvePromise(x, y, resolve, reject);
+					}, r => {
+						reject(r);
+					});
+				} else {
+					resolve(x);
+				}
+			} catch(e) {
+				reject(e);
+			}
+		} else {
+			resolve(x);
+		}
+	}
+	window.MyPromise = MyPromise;
+}(window));
+
+
+	let p1 = new MyPromise((resolve, reject) => {
+		setTimeout(() => {
+			resolve("aa");
+		}, 10);
+		
+		
+	});
+	
+	for (let i = 1; i < 1000000; i++) {
+		let result = (Math.PI + 0.7) / (i + 1.01);
+	}
+	
+	p1.then(value => {
+		console.log(value);
+	});
+	p1.then(value => {
+		console.log(value);
+	});
+	setTimeout(() => {
+		console.log("end");
+	}, 10);
+	
+</script>
+</head>
+<body>
+</body>
+</html>

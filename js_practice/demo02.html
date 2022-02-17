@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<!--
+<script>
+	function f() {
+		document.forms[0].action = "http://www.baidu.com";
+		document.forms[0].submit();
+		return false;
+	}
+</script>
+-->
+<script src="js/jquery.js"></script>
+<script>
+	window.onload = function() {
+		//alert(document.body.scrollTop);
+		//alert(document.documentElement.offsetHeight);
+		//alert(document.documentElement.scrollHeight);
+		//alert(document.documentElement.offsetHeight === document.documentElement.scrollHeight);	// true
+		//alert(document.documentElement.clientHeight);
+		var container = document.getElementById("outer");
+		//alert(container.clientWidth);
+		//alert(container.scrollWidth);
+		container.scrollLeft = container.scrollWidth - container.clientWidth;
+		
+		window.onhashchange = function() {
+			alert(location.hash);
+		};
+	};
+	$(function() {
+		//alert($("body").get(0) === document.body);	// true
+		//page(0);
+		
+		//alert($.data);
+		$("p").prepend("$");
+	});
+	
+	function page(n) {
+		var w = $(window);
+		var pageSize = w.height();
+		w.scrollTop(w.scrollTop() + n * pageSize);
+	}
+	
+	
+</script>
+<body>
+	<form method="post">
+		<input name="userid"/>
+		<input type="submit" value="submit" onclick="return f();"/>
+	</form>
+	
+	<div id="outer" style="background:green;width:300px;height:200px;margin:30px;padding:20px;border:10px black solid;overflow:scroll;">
+		<div style="background:orange;width:400px;height:200px;">
+			
+		</div>
+	</div>
+	<div id="map"></div>
+	
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+	<p>pppppp</p>
+</body>
+</html>
